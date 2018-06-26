@@ -1,5 +1,5 @@
-@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
-@import url(http://fonts.googleapis.com/earlyaccess/nanumgothiccoding.css);
+@import url('://fonts.googleapis.com/earlyaccess/nanumgothic.css');
+@import url('://fonts.googleapis.com/earlyaccess/nanumgothiccoding.css');
 
 * {
   font-family: 'Nanum Gothic';
@@ -7,6 +7,12 @@
 
 h1,h2,h3,h4,h5,h6 {
   font-family: 'Nanum Gothic';
+  margin-top: 50px;
+  text-transform:uppercase;
+}
+
+h2 {
+ font-family: 'Nanum Gothic';
 }
 
 code {
