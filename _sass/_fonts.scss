@@ -1,12 +1,13 @@
+@import url('//cdn.rawgit.com/openhiun/hangul/14c0f6faa2941116bb53001d6a7dcd5e82300c3f/nanumbarungothic.css');
 @import url('//fonts.googleapis.com/earlyaccess/nanumgothic.css');
 @import url('//fonts.googleapis.com/earlyaccess/nanumgothiccoding.css');
 
 * {
-  font-family: 'Nanum Gothic';
+  font-family: '나눔바른고딕','Nanum Barun Gothic','Nanum Gothic';
 }
 
 h1,h2,h3,h4,h5,h6 {
-  font-family: 'Nanum Gothic';
+  font-family: '나눔바른고딕','Nanum Barun Gothic','Nanum Gothic';
   margin-top: 50px;
   text-transform:uppercase;
 }
@@ -16,5 +17,5 @@ h2 {
 }
 
 code {
-  font-family: 'Nanum Gothic Coding','Bitstream Vera Sans Mono','Courier', monospace !important;
+  font-family: '','Nanum Gothic Coding','Bitstream Vera Sans Mono','Courier', monospace !important;
 }
