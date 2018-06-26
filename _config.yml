@@ -12,8 +12,7 @@ description: Web Developer from Somewhere
 avatar: /images/avatar.png
 
 # add
-url: https://markan82.github.io
-logo: '/images/avatar.png'
+# logo: '/images/avatar.png'
 
 # About/contact
 # author:
@@ -57,7 +56,7 @@ google_analytics: UA-20589042-10
 
 # Your website URL (e.g. http://barryclark.github.io or http://www.barryclark.co)
 # Used for Sitemap.xml and your RSS feed
-url:
+url: https://markan82.github.io
 
 # If you're hosting your site at a Project repository on GitHub pages
 # (http://yourusername.github.io/repository-name)
@@ -87,7 +86,7 @@ kramdown:
     css_class: 'highlight'
 
 # add
-excerpt_separator: "<!-- more -->"
+# excerpt_separator: "<!-- more -->"
 
 # Set the Sass partials directory, as we're using @imports
 sass:
