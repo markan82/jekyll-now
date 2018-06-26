@@ -9,22 +9,7 @@ name: 안피곤의 블로그
 description: Web Developer from Somewhere
 
 # URL of your avatar or profile pic (you could use your GitHub profile pic)
-avatar: /images/avatar.png
-
-# add
-# logo: '/images/avatar.png'
-
-# About/contact
-# author:
-  # name: 
-  # description: 
-  # contact:
-    # linkedin:  
-    # github:    
-    # facebook:  
-    # twitter:  
-    # weibo:     
-    # email:    
+avatar: /images/avatar.png 
 
 #
 # Flags below are optional
@@ -67,15 +52,13 @@ baseurl: ""
 #
 # !! You don't need to change any of the configuration flags below !!
 #
-#markdown: redcarpet
-#highlighter: pygments
 permalink: /:title/
 
 # The release of Jekyll Now that you're using
 version: v1.2.0
 
 # Jekyll 3 now only supports Kramdown for Markdown
-markdown: kramdown
+# markdown: kramdown
 kramdown:
   # Use GitHub flavored markdown, including triple backtick fenced code blocks
   input: GFM
@@ -85,24 +68,14 @@ kramdown:
     # Use existing pygments syntax highlighting css
     css_class: 'highlight'
 
-# add
-# excerpt_separator: "<!-- more -->"
-
 # Set the Sass partials directory, as we're using @imports
 sass:
   style: :expanded # You might prefer to minify using :compressed
-  #style: compressed
-  #sass_dir: _scss
 
 # Use the following plug-ins
 gems:
   - jekyll-sitemap # Create a sitemap using the official Jekyll sitemap gem
   - jekyll-feed # Create an Atom feed using the official Jekyll feed gem
-  #- jekyll-paginate # add
-
-#paginate: 5
-#paginate_path: '/blog/page:num'
-#permalink: pretty
 
 # Exclude these files from your production _site
 exclude:
