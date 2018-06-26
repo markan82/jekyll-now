@@ -1,0 +1,3 @@
+User-agent: * 
+Allow: / 
+Sitemap: https://msrkan82.github.io/sitemap.xml
