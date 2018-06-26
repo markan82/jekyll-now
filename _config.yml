@@ -11,6 +11,22 @@ description: Web Developer from Somewhere
 # URL of your avatar or profile pic (you could use your GitHub profile pic)
 avatar: /images/avatar.png
 
+# add
+url: https://markan82.github.io
+logo: '/images/avatar.png'
+
+# About/contact
+# author:
+  # name: 
+  # description: 
+  # contact:
+    # linkedin:  
+    # github:    
+    # facebook:  
+    # twitter:  
+    # weibo:     
+    # email:    
+
 #
 # Flags below are optional
 #
@@ -60,23 +76,34 @@ permalink: /:title/
 version: v1.2.0
 
 # Jekyll 3 now only supports Kramdown for Markdown
-#kramdown:
+markdown: kramdown
+kramdown:
   # Use GitHub flavored markdown, including triple backtick fenced code blocks
-  #input: GFM
+  input: GFM
   # Jekyll 3 and GitHub Pages now only support rouge for syntax highlighting
-  #syntax_highlighter: rouge
-  #syntax_highlighter_opts:
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
     # Use existing pygments syntax highlighting css
-    #css_class: 'highlight'
+    css_class: 'highlight'
+
+# add
+excerpt_separator: "<!-- more -->"
 
 # Set the Sass partials directory, as we're using @imports
 sass:
   style: :expanded # You might prefer to minify using :compressed
+  #style: compressed
+  #sass_dir: _scss
 
 # Use the following plug-ins
 gems:
   - jekyll-sitemap # Create a sitemap using the official Jekyll sitemap gem
   - jekyll-feed # Create an Atom feed using the official Jekyll feed gem
+  #- jekyll-paginate # add
+
+#paginate: 5
+#paginate_path: '/blog/page:num'
+#permalink: pretty
 
 # Exclude these files from your production _site
 exclude:
