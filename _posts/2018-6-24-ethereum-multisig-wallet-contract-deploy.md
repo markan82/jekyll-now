@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "이더리움 멀티시그 지갑 컨트랙트 배포"
+title: "이더리움 멀티시그 지갑 컨트랙트 배포하기"
 ---
 
 이번에는 이더리움 멀티시그 지갑 컨트랙트를 배포하는 것을 알아봅니다. 
@@ -32,7 +32,7 @@ var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8551'));
 
 멀티시트 컨트랙트 소스는 아래 github에서 가져왔습니다. 컨트랙트 소스 내용에 대한 설명은 생략합니다.
 
-https://github.com/christianlundkvist/simple-multisig
+[https://github.com/christianlundkvist/simple-multisig](https://github.com/christianlundkvist/simple-multisig)
 
 ```javascript
 pragma solidity ^0.4.22;
@@ -187,7 +187,7 @@ var serializedTx = tx.serialize();
 // 2. 트랜잭션 전송하기
 web3.eth.sendRawTransaction('0x' + serializedTx.toString('hex'), function(err, txId) {
   if (!err) {
- 		console.log('txId: ', txId); // 트랜잭션ID값
+    console.log('txId: ', txId); // 트랜잭션ID값
   }
 });
 ```
