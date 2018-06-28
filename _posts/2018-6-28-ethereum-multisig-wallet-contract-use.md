@@ -61,11 +61,11 @@ web3.eth.sendRawTransaction('0x' + tx.serialize().toString('hex'), function(err,
 
 아래 화면은 아직 채굴전이라서 트랜잭션이 아직 pending 상태이고, 컨트랙트 잔액이 0 Ether 입니다.
 
-![](assets/multisig_contract_2_1.png)
+![](/images/multisig_contract_2_1.png)
 
 채굴이 되어 트랜잭션이 블록에 포함되면, 트랜잭션 상태가 바뀌고 컨트랙트가 0.1 Ether를 가지고 있는 것을 확인할 수 있습니다.
 
-![](assets/multisig_contract_2_2.png)
+![](/images/multisig_contract_2_2.png)
 
 
 
