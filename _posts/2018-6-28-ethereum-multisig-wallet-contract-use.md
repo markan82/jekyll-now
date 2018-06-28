@@ -5,9 +5,9 @@ title: "이더리움 멀티시그 지갑 컨트랙트에서 송금하기"
 
 이번에는 이더리움 멀티시그 지갑 컨트랙트를 이용하여 송금하는 것을 알아봅니다.
 
->  이더리움 멀티시그 지갑 컴트랙트 배포 방법은 이전글을 참고바랍니다.
->
-> - [이더리움 멀티시그 지갑 컨트랙트 배포하기](https://markan82.github.io/ethereum-multisig-wallet-contract-deploy/)
+이더리움 멀티시그 지갑 컴트랙트 배포 방법은 이전글을 참고바랍니다.
+
+- [이더리움 멀티시그 지갑 컨트랙트 배포하기](https://markan82.github.io/ethereum-multisig-wallet-contract-deploy/)
 
 
 
