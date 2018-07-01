@@ -2,12 +2,12 @@
 @import url('//fonts.googleapis.com/earlyaccess/nanumgothic.css');
 @import url('//fonts.googleapis.com/earlyaccess/nanumgothiccoding.css');
 
-* {
-  font-family: 'NanumBarunGothic','Nanum Barun Gothic','Nanum Gothic';
+P {
+  font-family: 'NanumBarunGothic','Nanum Barun Gothic','Nanum Gothic' !important;
 }
 
 h1,h2,h3,h4,h5,h6 {
-  font-family: '나눔바른고딕','Nanum Barun Gothic','Nanum Gothic';
+  font-family: '나눔바른고딕','Nanum Barun Gothic','Nanum Gothic' !important;
   margin-top: 50px;
   text-transform:uppercase;
 }
