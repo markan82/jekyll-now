@@ -12,9 +12,12 @@ font-family: 'Nanum Myeongjo', serif;
 */
 //@import url('https://fonts.googleapis.com/css?family=Nanum+Gothic|Nanum+Gothic+Coding|Nanum+Myeongjo:400,800&subset=korean');
 
+// font-family: 'KoPub Batang', serif;
+//@import url(//fonts.googleapis.com/earlyaccess/notosansinscriptionalpahlavi.css);
+
 /* 제목 */
 h1,h2,h3,h4,h5,h6 {
-  font-family: 'Nanum Myeongjo', '나눔명조', Helvetica, Arial, sans-serif !important;
+  font-family: 'KoPub Batang', '맑은 고딕', Helvetica, Arial, sans-serif !important;
   margin-top: 50px; 
   font-weight: 800;
   font-style: normal;
@@ -27,10 +30,10 @@ h2 {
 
 /* 본문 */
 div, p, li, th, td {
-  font-family: 'Nanum Myeongjo', '나눔명조', Helvetica, Arial, sans-serif !important;
+  font-family: 'KoPub Batang', '맑은 고딕', Helvetica, Arial, sans-serif !important;
 }
 
 /* 코드 */
 code {
-  font-family: 'Nanum Gothic Coding', 'Courier', monospace !important;
+  font-family: '나눔고딕코딩', monospace !important;
 }
