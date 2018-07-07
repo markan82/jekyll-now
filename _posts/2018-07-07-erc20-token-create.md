@@ -87,7 +87,7 @@ contract EIP20 is EIP20Interface {
 
 컨트랙트를 배포하기 위해 Ropsten 테스트넷을 사용합니다. 
 
-#### 테스트넷 연결
+### 테스트넷 연결
 
 web3를 이용하여 테스트넷에 접속하기 위해서 [www.infura.io](https://www.infura.io/) 에 회원가입하여 `API_KEY`를 발급받습니다.테스트넷 접속 URL는 `https://ropsten.infura.io/[API_KEY]`의 형태가 됩니다. 아래와 같이 테스트넷에 연결합니다.
 
@@ -99,7 +99,7 @@ var TEST_NET_URL = 'https://ropsten.infura.io/[infura_api_key_here]';
 var web3 = new Web3(new Web3.providers.HttpProvider(TEST_NET_URL));
 ```
 
-#### 컨트랙트 컴파일
+### 컨트랙트 컴파일
 
 이제 소스코드 `EIP20.sol` 파일을 컴파일합니다. 그리고 이더리움 노드에 등록할 토큰 컨트랙트를 생성하도록 하겠습니다.
 
@@ -121,7 +121,7 @@ var amount = 10000;			// 초기 코인량
 var decimals = 18;			// 자연 단위수(10^18)
 var txInputData = '0x' + contract.new.getData(amount, name, decimals, symbol, {data: bytecode});
 ```
-#### 개인키 생성
+### 개인키 생성
 
 트랜잭션을 서명할 개인키는 니모닉 워드를 사용하여 생성하겠습니다. 
 
@@ -137,7 +137,7 @@ var fromAddress = '0x' + ethUtil.privateToAddress(privkey.toBuffer()).toString('
 console.log('fromAddress:', fromAddress); // 이더리움 주소
 ```
 
-#### 트랙잭션 서명
+### 트랙잭션 서명
 
 이제 트랜잭션을 구성하고 개인키로 트랜잭션을 서명 합니다.
 
@@ -163,7 +163,7 @@ const rawTx = {
 const tx = new EthTx(rawTx); // 트랜잭션 객체 생성
 tx.sign(privkey); // tx 서명
 ```
-#### 트랜잭션 전송 및 컨트랙트 배포
+### 트랜잭션 전송 및 컨트랙트 배포
 
 이제 이더리움 네트워크에 트랜잭션을 전송합니다. 
 참고로 컨트랙트를 배포하기 위해서는 수수료를 지불할 수 있을 정도의 Ether가 있어야합니다. 테스트넷의 Ether를 받는 방법은 [Faucet](http://faucet.ropsten.be:3001/)를 이용하는 것입니다.
@@ -181,11 +181,11 @@ web3.eth.sendRawTransaction('0x' + serializedTx.toString('hex'), function(err, h
 
 트랜잭션을 전송하고 나서 출력된 `txHash`값을 이용하여 테스트넷 이더스캔([https://ropsten.etherscan.io/](https://ropsten.etherscan.io/))에서 컨트랙트 주소를 확인합니다. 채굴이 완료되면 방금 등록한 토큰의 address가 보일 것 입니다.
 
-#### 토큰 확인
+### 토큰 확인
 
 컨트랙트 주소가 생성되면 아래와 같이 토큰을 확인 할 수 있다.
 
-```
+```js
 var contractAddress = '[컨트랙트 주소]';
 var contractInstance = web3.eth.contract(abiDefinition).at(contractAddress);
 console.log('symbol:', contractInstance.symbol.call());
@@ -194,7 +194,7 @@ console.log('name:', contractInstance.name.call());
 console.log('balance:', contractInstance.balanceOf.call(fromAddress).toNumber());
 ```
 Result:
-```plain
+```bash
 symbol: ANP
 drcimals: 18
 name: 안피곤 코인
