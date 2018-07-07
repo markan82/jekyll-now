@@ -194,6 +194,7 @@ console.log('name:', contractInstance.name.call());
 console.log('balance:', contractInstance.balanceOf.call(fromAddress).toNumber());
 ```
 Result:
+
 ```bash
 symbol: ANP
 drcimals: 18
