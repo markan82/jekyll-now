@@ -43,3 +43,12 @@ article.post .entry {
 code {
   font-family: '나눔고딕코딩', monospace !important;
 }
+
+sub {
+  vertical-align: sub;
+  font-size: smaller;
+}
+sup {
+  vertical-align: super;
+  font-size: smaller;
+}
