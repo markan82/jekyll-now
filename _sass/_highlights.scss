@@ -23,6 +23,12 @@ pre.highlight {
   overflow: scroll;
   font-size: 0.9rem;
   -ms-overflow-style: none; 
+  font-size: .75em;
+  line-height: 1.8;
+  border-radius: 4px;
+  font-family: Monaco,Consolas,"Lucida Console",monospace;
+  position: relative;
+  margin-bottom: 1em;
 }
 ::-webkit-scrollbar { display:none; }
 /*
