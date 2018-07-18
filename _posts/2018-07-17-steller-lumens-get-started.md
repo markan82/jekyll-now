@@ -17,8 +17,8 @@ published: true
 
 스텔라<sub>stellar</sub> SDK는 아래와 같이 2종류가 존재합니다.
 
-- js-stellar-base: https://github.com/stellar/js-stellar-base
-- js-stellar-sdk: https://github.com/stellar/js-stellar-sdk
+- js-stellar-base: [https://github.com/stellar/js-stellar-base](https://github.com/stellar/js-stellar-base)
+- js-stellar-sdk: [https://github.com/stellar/js-stellar-sdk](https://github.com/stellar/js-stellar-sdk)
 
 ### js-stellar-base
 
@@ -52,7 +52,7 @@ var StellarSdk = require('stellar-sdk');
 
 
 
-## 계정<sub>Account</sub> 생성
+## 계정(Account) 생성
 
 스텔라 네트워크에서 거래를 하기 위해서는 계정을 생성하여야 합니다. 계정<sub>account</sub>은 **public key**와 **secret seed** 로 구성됩니다. 아래와 같이 `public Key`와 `secret`를 생성 할 수 있습니다.
 
@@ -67,7 +67,7 @@ pair.publicKey(); // GCFXHS4GXL6BVUCXBWXGTITROWLVYXQKQLF4YH5O5JT3YZXCYPAFBJZB
 
 
 
-### Friendbot API로 계정<sub>Account</sub> 생성
+### Friendbot API로 계정(Account) 생성
 
 테스트넷에서는 friendbot API를 이용하여 아래와 같이 계정 생성 요청을 할 수 있습니다.
 
