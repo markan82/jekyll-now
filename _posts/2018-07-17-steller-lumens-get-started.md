@@ -1,9 +1,9 @@
 ---
 layout: post
-title: "스텔라(Stellar) 시작하기"
+title: "스텔라 루멘(Stellar lumens) 시작하기"
 category: 
 tagline: 
-tags : ["스텔라","루멘","가상화폐","코인","Stellar","lumen","coin"] 
+tags : ["스텔라 루멘","스텔라","루멘","가상화폐","코인","Stellar lumens","Stellar","lumen","coin"] 
 published: true
 ---
 
