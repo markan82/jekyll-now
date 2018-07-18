@@ -9,8 +9,10 @@ pre.highlight {
 */
   margin: 20px 0 20px 0;
   overflow: scroll;
-  font-size: 0.9rem
+  font-size: 0.9rem;
+  -ms-overflow-style: none; 
 }
+::-webkit-scrollbar { display:none; }
 /*
 code {
   font-family:'Bitstream Vera Sans Mono','Courier', monospace;
