@@ -7,7 +7,7 @@ tags : ["스텔라","루멘","가상화폐","코인","Stellar","lumen","coin"]
 published: true
 ---
 
-스텔라~Stellar~는 [리플~Ripple~](https://ripple.com/xrp)에서 하드포크하여 개발되었습니다. 현재 비영리 기업인 스텔라 재단에서 운영하고 있습니다. 거래코드는 XLM이고 총 발행량은 1,000억 개입니다.
+스텔라<sub>Stellar</sub>는 [리플<sub>Ripple</sub>](https://ripple.com/xrp)에서 하드포크하여 개발되었습니다. 현재 비영리 기업인 스텔라 재단에서 운영하고 있습니다. 거래코드는 XLM이고 총 발행량은 1,000억 개입니다.
 
 리플과 스텔라가 다른 점은 리플은 수수료를 소각하지만, 스텔라는 계속 잔류하여 1% 수준의 인플레이션을 유발합니다. 리플이 기업간의 자금송금을 목적으로 하고 있다면 스텔라루멘은 개인간의 거래를 목적으로 만들어진 화폐입니다. 합의 매커니즘은 [SCP(Stellar Consensus Protocol)](https://www.stellar.org/papers/stellar-consensus-protocol.pdf)를 사용합니다.
 
@@ -15,7 +15,7 @@ published: true
 
 ## 스텔라 SDK
 
-스텔라~stellar~ SDK는 아래와 같이 2종류가 존재합니다.
+스텔라<sub>stellar</sub> SDK는 아래와 같이 2종류가 존재합니다.
 
 - js-stellar-base: https://github.com/stellar/js-stellar-base
 - js-stellar-sdk: https://github.com/stellar/js-stellar-sdk
@@ -52,9 +52,9 @@ var StellarSdk = require('stellar-sdk');
 
 
 
-## 계정~Account~ 생성
+## 계정<sub>Account</sub> 생성
 
-스텔라 네트워크에서 거래를 하기 위해서는 계정을 생성하여야 합니다. 계정~account~은 **public key**와 **secret seed** 로 구성됩니다. 아래와 같이 `public Key`와 `secret`를 생성 할 수 있습니다.
+스텔라 네트워크에서 거래를 하기 위해서는 계정을 생성하여야 합니다. 계정<sub>account</sub>은 **public key**와 **secret seed** 로 구성됩니다. 아래와 같이 `public Key`와 `secret`를 생성 할 수 있습니다.
 
 ```js
 var pair = StellarSdk.Keypair.random();  
@@ -63,11 +63,11 @@ pair.secret(); // SAV76USXIJOBMEQXPANUOQM6F5LIOTLPDIDVRJBFFE2MDJXG24TAPUU7
 pair.publicKey(); // GCFXHS4GXL6BVUCXBWXGTITROWLVYXQKQLF4YH5O5JT3YZXCYPAFBJZB 
 ```
 
-생성된 *secret seed* 와 *public key*를 이용해서 거래를 하기 위해서는 스텔라 네트워크에 계정 생성 요청을 해야합니다. 스텔라에서는 무분별한 불필요한 계정 생성을 막기 위해서 계정의 최소 잔액을 1루멘~lumen~을 정의하고 있습니다. 계정을 생성하기 위해서는 루멘을 가지고 있는 계정이 필요합니다. 다만 테스트넷에서는 계정을 생성 할 수 있는 Friendbot API를 제공하고 있습니다.
+생성된 *secret seed* 와 *public key*를 이용해서 거래를 하기 위해서는 스텔라 네트워크에 계정 생성 요청을 해야합니다. 스텔라에서는 무분별한 불필요한 계정 생성을 막기 위해서 계정의 최소 잔액을 1루멘<sub>lumen</sub>을 정의하고 있습니다. 계정을 생성하기 위해서는 루멘을 가지고 있는 계정이 필요합니다. 다만 테스트넷에서는 계정을 생성 할 수 있는 Friendbot API를 제공하고 있습니다.
 
 
 
-### Friendbot API로 계정~Account~ 생성
+### Friendbot API로 계정<sub>Account</sub> 생성
 
 테스트넷에서는 friendbot API를 이용하여 아래와 같이 계정 생성 요청을 할 수 있습니다.
 
@@ -124,7 +124,7 @@ server.loadAccount(pair.publicKey()).then(function(account) {
 
 ### createAccount 오퍼레이션으로 계성 생성
 
-`createAccount` 오퍼레이션~operation~를 사용하여 계정 생성하는 방법은 아래와 같습니다. 트랜잭션을 서명하는 계정에는 계정 생성에 필요한 1루멘와 수수료를 포함한 잔액을 가지고 있어야합니다.
+`createAccount` 오퍼레이션<sub>operation</sub>를 사용하여 계정 생성하는 방법은 아래와 같습니다. 트랜잭션을 서명하는 계정에는 계정 생성에 필요한 1루멘와 수수료를 포함한 잔액을 가지고 있어야합니다.
 
 ```js
 var secretKey = '루멘을 가지고 있는 계정의 secret key';
