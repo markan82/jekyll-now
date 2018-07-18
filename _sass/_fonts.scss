@@ -17,7 +17,7 @@ font-family: 'Nanum Myeongjo', serif;
 
 /* 제목 */
 h1,h2,h3,h4,h5,h6 {
-  font-family: /*'KoPub Batang',*/ '맑은 고딕', Helvetica, Arial, sans-serif !important;
+  font-family: 'Nanum Myeongjo', /*'KoPub Batang',*/ '맑은 고딕', Helvetica, Arial, sans-serif !important;
   margin-top: 50px; 
   font-weight: 800;
   font-style: normal;
@@ -36,12 +36,12 @@ article.post .entry {
   line-height: 1.8 !important;
   text-align: justify !important;
   word-break: break-all !important;
-  font-family: "Nanum Barun Gothic Regular", "나눔바른고딕OTF", "NanumBarunGothicOTF", "맑은 고딕", "Malgun Gothic", "애플 SD 산돌고딕 Neo", "Apple SD Gothic Neo", '돋움', Halvetica, Verdana, Arial, sans-serif !important;
+  font-family: 'Nanum Myeongjo', "Nanum Barun Gothic Regular", "나눔바른고딕OTF", "NanumBarunGothicOTF", "맑은 고딕", "Malgun Gothic", "애플 SD 산돌고딕 Neo", "Apple SD Gothic Neo", '돋움', Halvetica, Verdana, Arial, sans-serif !important;
 }
 
 /* 코드 */
 code {
-  font-family: '나눔고딕코딩', monospace !important;
+  font-family: 'Bitstream Vera Sans', '나눔고딕코딩', monospace !important;
   font-size: 0.9rem;
 }
 
