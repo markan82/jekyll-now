@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <style>
+      body {font: 12px sans-serif;}
+    </style>
+  </head>
+  <body>
+    <form name="form">
+      username: <input name="username" /><br>
+      postingKey: <input name="postingKey" />
+      <button type='button' onclick='load()'>조회</button>
+    </form>
+    <table>
+      <tr><th>Voting Power</th><td id="steem_power"></td></tr>
+      <tr><th>Reputation</th><td id="reputation"></td></tr>
+    </table>
+
+    <div id="items"></div>
+    
+    <script src="//cdn.steemjs.com/lib/latest/steem.min.js"></script>
+    <script>
+      var query = {"tag": "kr", "limit": 100};
+      var username;
+
+      function getAccount() {
+        steem.api.getAccounts([username], function(err, accounts) {
+          if (err) return alert(err)
+          var account = accounts[0];
+          var elapsed_seconds = (new Date() - new Date(account.last_vote_time + "Z")) / 1000;
+          var regenerated_power = (10000 * elapsed_seconds) / (60 * 60 * 24 * 5);
+          var current_power = Math.round(Math.min(account.voting_power + regenerated_power, 10000));
+          document.getElementById('steem_power').innerHTML = (current_power / 100) + '%';
+          var reputation = steem.formatter.reputation(account.reputation);
+          document.getElementById('reputation').innerHTML = reputation;
+        })
+      }
+
+      function getDiscussionsByCreated() {
+        steem.api.getDiscussionsByCreated(query, function(err, result) {
+          if(err) return  alert(err);
+          // console.log(result);
+          var items = result.filter(function(item) {
+            // 내가 보팅 안한 글만...
+            const voters = item.active_votes.map(vote => vote.voter);
+            const isVoted = voters.includes(username);
+            if( isVoted ) return false; // continue;
+
+            // 다운보팅을 받지 않았고 보팅참여자자가 10명 이하
+            if( item.net_votes < 0 || item.net_votes > 10) return false;
+
+            // 1시간 이내 30분이 지난 글만
+            var elapsed_minutes = (new Date() - new Date(item.created + 'Z')) / (60 * 1000);
+            if( elapsed_minutes < 30 || elapsed_minutes > 60 ) return false; // continue;
+
+            return true;
+          });
+
+          items.sort(function(a, b) {
+            return b.vote_rshares- a.vote_rshares;
+          });
+          
+          var html = [];
+          items.forEach(item => {
+            var author_reputation = steem.formatter.reputation(item.author_reputation);
+            var elapsed_minutes = (new Date() - new Date(item.created + 'Z')) / (60 * 1000);
+            html.push('<a href="#" onclick="vote(\''+item.author+'\', \''+item.permlink+'\')">');
+            html.push(item.vote_rshares + ', ' + item.title + '<br>');
+            html.push(item.pending_payout_value + ' | ' + item.net_votes + ' votes | ' + Math.floor(elapsed_minutes) + '분 전 by ' + item.root_author + '(' + author_reputation + ') in ' + item.category + '<br>');
+            html.push('</a><hr>');
+          });
+
+          document.getElementById('items').innerHTML = html.join('');
+        });
+      }
+
+      function vote(author, permlink, weight) {
+        var postingWif = document.form.postingKey.value;
+        steem.broadcast.vote(
+          postingWif,
+          username, // Voter
+          author, // Author
+          permlink, // Permlink
+          weight || 10000, // Weight (10000 = 100%)
+          function(err, result) {
+            if(err) return  alert(err);
+            console.log(err, result);
+            getAccount();
+            alert(result.id);
+          }
+        );
+      }
+      
+      function load() {
+        username = document.form.username.value;
+        getAccount();
+        getDiscussionsByCreated();
+      }
+      </script>
+  </body>
+</html>
