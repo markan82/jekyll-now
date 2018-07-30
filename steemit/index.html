@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>스팀잇 자동 업보팅 | Steemit auto voting project</title>
+    <title>스팀잇 보팅 어플리케이션</title>
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -126,9 +126,9 @@ anpigon 님은 STEEM POWER 를 임대 받고 있습니다. 임대 받는 양은 
                   </div> -->
 
                   <div class="row">
-                    <div class="col">
+                    <!-- <div class="col">
                       <button type="button" v-bind:class="['btn', runAutoVote?'btn-warning':'btn-success']" @click.prevent='startAutoVoting'>{{ (runAutoVote ? 'Stop' : 'Start') +  ' Auto Voting' }}</button>
-                    </div>
+                    </div> -->
                     <div class="col text-right">
                       <button type="submit" class="btn btn-primary" @click.prevent="getDiscussions">Search</button>
                     </div>
@@ -185,6 +185,7 @@ anpigon 님은 STEEM POWER 를 임대 받고 있습니다. 임대 받는 양은 
         el: '#app',
         data() {
           return {
+            username: window.localStorage.getItem('username') || '',
             account: {
               bandwidthRemaining: 0,
               postCount: 0,
@@ -209,14 +210,6 @@ anpigon 님은 STEEM POWER 를 임대 받고 있습니다. 임대 받는 양은 
           }
         },
         computed: {
-          username: {
-            get() {
-              return window.localStorage.getItem('username')
-            },
-            set(value) {
-              window.localStorage.setItem('username', value)
-            }
-          },
           iswif () {
             return steem.auth.isWif(this.postingKey)
           },
@@ -262,6 +255,7 @@ anpigon 님은 STEEM POWER 를 임대 받고 있습니다. 임대 받는 양은 
               this.account.age = Math.floor((new Date() - created) / (1000 * 60 * 60 * 24));
               this.account.created = created.toLocaleDateString("ko-KR");
               this.account.username = account.name;
+              window.localStorage.setItem('username', account.name)
 
               steem.api.getState("/@" + account.name, (e2, state) => {
                 if (e2) return alert(e2)
