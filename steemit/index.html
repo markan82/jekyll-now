@@ -1,102 +1,395 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>스팀잇 자동 업보팅 | Steemit auto voting project</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- IE8 에서 HTML5 요소와 미디어 쿼리를 위한 HTML5 shim 와 Respond.js -->
+    <!-- WARNING: Respond.js 는 당신이 file:// 을 통해 페이지를 볼 때는 동작하지 않습니다. -->
+    <!--[if lt IE 9]>
+      <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
     <style>
-      body {font: 12px sans-serif;}
+      .material-icons.md-18 { font-size: 18px; vertical-align: bottom;}
+      .material-icons.md-24 { font-size: 24px; vertical-align: bottom;}
+      .material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }
+      .material-icons.md-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }
+      .card.selected {border-color: #007bff;}
     </style>
   </head>
   <body>
-    <form name="form">
-      username: <input name="username" /><br>
-      postingKey: <input name="postingKey" />
-      <button type='button' onclick='load()'>조회</button>
-    </form>
-    <table>
-      <tr><th>Voting Power</th><td id="steem_power"></td></tr>
-      <tr><th>Reputation</th><td id="reputation"></td></tr>
-    </table>
+    <div id="app">
+      <div class="container">
+        <h2 >Auto Voting App</h2>
+        <hr>
+        <div class="row">
+          <div class="col-lg-4 mb-2">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title mb-3">@{{ account.username }}</h5>
+                <h6 class="card-subtitle mb-1 text-muted">Voting Power</h6>
+                <div class="progress">
+                  <div class="progress-bar progress-bar-striped" role="progressbar" 
+                    :style="'width: ' + account.votingPower + '%'" :aria-valuenow="account.votingPower" aria-valuemin="0" aria-valuemax="100">{{account.votingPower}}%</div>
+                </div>
+                <p class="card-text"><small class="text-muted">full in {{ account.remainHours }} hours</small></p>
 
-    <div id="items"></div>
-    
+                <h6 class="card-subtitle mb-1 text-muted">Bandwidth Remaining</h6>
+                <div class="progress mb-3">
+                  <div class="progress-bar progress-bar-striped bg-success" role="progressbar" 
+                  :style="'width: ' + account.bandwidthRemaining + '%'" :aria-valuenow="account.bandwidthRemaining" aria-valuemin="0" aria-valuemax="100">{{ account.bandwidthRemaining }}%</div>
+                </div>
+
+                <h6 class="card-subtitle mb-1 text-muted">Reputation</h6>
+                <p class="card-text">{{ account.reputation }} <small class="text-muted">({{ account.postCount }} posts)</small></p>
+
+                <h6 class="card-subtitle mb-1 text-muted">Steem Power</h6>
+                <p class="card-text">{{ account.vestingSteem }} STEEM <small v-if="account.receivedVestingSteem > 0" class="text-muted">(+{{ account.receivedVestingSteem }} STEEM)</small></p>
+                <!-- 스팀잇에서의 영향력을 나타냅니다. 스팀 파워가 높을수록 보팅 금액이 더 높아지고, 큐레이션 보상도 더 많이 받을 수 있습니다.
+anpigon 님은 STEEM POWER 를 임대 받고 있습니다. 임대 받는 양은 가입 시기에 따라 가변적입니다. -->
+                
+                <h6 class="card-subtitle mb-1 text-muted">Age</h6>
+                <p class="card-text mb-0">{{ account.age }} days <small class="text-muted">({{ account.created }})</small></p>
+                
+                <!-- 
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <a href="#" class="btn btn-primary">Go somewhere</a> -->
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-8">
+            <form>
+              <div class="form-row">
+                <div class="form-group col-12 col-sm-8 col-md-6 col-lg-4 col-xl-4">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="material-icons">person</i></span>
+                    </div>
+                    <input type="text" placeholder="Username" placeholder="anpigon" class="form-control"
+                      v-model="username" aria-label="Username"  aria-describedby="basic-addon1">
+                    <div class="input-group-append">
+                      <button type="button" class="btn btn-outline-secondary pb-0" @click.prevent="getAccount">
+                        <i class="material-icons">search</i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group col-12 col-md-11 col-lg-8 col-xl-8">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="material-icons">vpn_key</i></span>
+                      <!-- <span class="input-group-text" id="basic-addon2">Key</span> -->
+                    </div>
+                    <input type="text" class="form-control" v-model="account.postingKey" ref="postingKey" placeholder="5JiZuiBkaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" aria-label="PostingKey" aria-describedby="basic-addonw">
+                  </div>  
+                </div>
+              </div>
+            </form>
+            <div class="card mb-2">
+              <div class="card-body">
+                <h5 class="card-title">Search Discussions</h5>
+                <form>
+                  <div class="form-group">
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="material-icons">local_offer</i></span>
+                      </div>
+                      <input type="text" class="form-control" name="tag" placeholder="Tag" aria-label="tag" aria-describedby="basic-addonw" v-model="search.tag">
+                    </div>  
+                  </div>
+                  <div class="form-group">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" v-model='search.after30min' id="defaultCheck1">
+                      <label class="form-check-label" for="defaultCheck1">
+                        게시한지 30분이 지난 글
+                      </label>
+                    </div>
+                  </div>
+                <!-- 보팅 웨이트
+                게시글 등록시간 -->
+                  <!-- <div class="form-group">
+                    <label for="formControlRange">Example Range input</label>
+                    <input type="range" class="form-control-range" id="formControlRange">
+                  </div> -->
+                  <!-- <div class="form-group row">
+                    <div class="col-2">
+                      <input type="number" class="form-control" placeholder="City">
+                    </div>
+                    <div class="col-2">
+                      <input type="number" class="form-control" placeholder="State">
+                    </div>
+                  </div> -->
+
+                  <div class="row">
+                    <div class="col">
+                      <button type="button" v-bind:class="['btn', runAutoVote?'btn-warning':'btn-success']" @click.prevent='startAutoVoting'>{{ (runAutoVote ? 'Stop' : 'Start') +  ' Auto Voting' }}</button>
+                    </div>
+                    <div class="col text-right">
+                      <button type="submit" class="btn btn-primary" @click.prevent="getDiscussions">Search</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class=" mb-2 col-6 col-xl-4" v-for="d in discussions">
+            <div :class="['card', {'selected' : d.selected}]">
+              <div class="card-img-top" style='min-height:200px;max-height:200px; overflow: hidden;'>
+                <img v-if="d.main_iamge" :src="d.main_iamge" alt="Card image cap" style='width:100%' @load="imageLoaded">
+                <img v-if="!d.main_iamge" src='https://steemit.com/images/steemit.png' style='width:100%'>
+              </div>
+              <div class="card-body">
+                <h5 class="card-title text-truncate"><a :href="'https://steemit.com' + d.url" onclick='return !window.open(this.href)' :title='d.root_title'>{{d.root_title}}</a></h5>
+                <p class="card-text text-truncate">{{ d.text }}</p>
+                <p class="card-text text-muted">
+                  <button  v-if='!d.voted' @click.prevent="vote(d)" class="btn btn-light pl-0 pr-0 pt-0 pb-0"><i class="material-icons md-24 md-dark md-inactive">thumb_up_alt</i> </button>
+                  <i class="material-icons md-24 md-dark md-active" v-if='d.voted'>thumb_up_alt</i>$ {{ d.payout }} <span class='ml-2 mr-2'>|</span>
+                  <i class="material-icons md-24 md-dark">expand_less</i> {{ d.net_votes }} <span class='ml-2 mr-2'>|</span>
+                  <i class="material-icons md-24 md-dark">forum</i> {{ d.children }}
+                <!-- </p>
+                <a href="#" class="btn btn-primary">Go somewhere</a> -->
+              </div>
+              <div class="card-footer text-muted">
+                <small> 
+                  By <a :href="'https://steemit.com/@' + d.root_author" onclick='return !window.open(this.href)'>{{ d.root_author }}</a>({{d.author_reputation}})
+                  in <a :href="'https://steemit.com/trending/' + d.category" onclick='return !window.open(this.href)'>{{ d.category }}</a>
+                  • {{ d.elapsed_minutes }}분 전
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+           
+      </div><!-- /.container -->
+    </div>            
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="//code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="//cdn.steemjs.com/lib/latest/steem.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/vue"></script>
     <script>
-      var query = {"tag": "kr", "limit": 100};
-      var username;
-
-      function getAccount() {
-        steem.api.getAccounts([username], function(err, accounts) {
-          if (err) return alert(err)
-          var account = accounts[0];
-          var elapsed_seconds = (new Date() - new Date(account.last_vote_time + "Z")) / 1000;
-          var regenerated_power = (10000 * elapsed_seconds) / (60 * 60 * 24 * 5);
-          var current_power = Math.round(Math.min(account.voting_power + regenerated_power, 10000));
-          document.getElementById('steem_power').innerHTML = (current_power / 100) + '%';
-          var reputation = steem.formatter.reputation(account.reputation);
-          document.getElementById('reputation').innerHTML = reputation;
-        })
-      }
-
-      function getDiscussionsByCreated() {
-        steem.api.getDiscussionsByCreated(query, function(err, result) {
-          if(err) return  alert(err);
-          // console.log(result);
-          var items = result.filter(function(item) {
-            // 내가 보팅 안한 글만...
-            const voters = item.active_votes.map(vote => vote.voter);
-            const isVoted = voters.includes(username);
-            if( isVoted ) return false; // continue;
-
-            // 다운보팅을 받지 않았고 보팅참여자자가 10명 이하
-            if( item.net_votes < 0 || item.net_votes > 10) return false;
-
-            // 1시간 이내 30분이 지난 글만
-            var elapsed_minutes = (new Date() - new Date(item.created + 'Z')) / (60 * 1000);
-            if( elapsed_minutes < 30 || elapsed_minutes > 60 ) return false; // continue;
-
-            return true;
-          });
-
-          items.sort(function(a, b) {
-            return b.vote_rshares- a.vote_rshares;
-          });
-          
-          var html = [];
-          items.forEach(item => {
-            var author_reputation = steem.formatter.reputation(item.author_reputation);
-            var elapsed_minutes = (new Date() - new Date(item.created + 'Z')) / (60 * 1000);
-            html.push('<a href="#" onclick="vote(\''+item.author+'\', \''+item.permlink+'\')">');
-            html.push(item.vote_rshares + ', ' + item.title + '<br>');
-            html.push(item.pending_payout_value + ' | ' + item.net_votes + ' votes | ' + Math.floor(elapsed_minutes) + '분 전 by ' + item.root_author + '(' + author_reputation + ') in ' + item.category + '<br>');
-            html.push('</a><hr>');
-          });
-
-          document.getElementById('items').innerHTML = html.join('');
-        });
-      }
-
-      function vote(author, permlink, weight) {
-        var postingWif = document.form.postingKey.value;
-        steem.broadcast.vote(
-          postingWif,
-          username, // Voter
-          author, // Author
-          permlink, // Permlink
-          weight || 10000, // Weight (10000 = 100%)
-          function(err, result) {
-            if(err) return  alert(err);
-            console.log(err, result);
-            getAccount();
-            alert(result.id);
+      let interval;
+      const app = new Vue({
+        el: '#app',
+        data() {
+          return {
+            account: {
+              bandwidthRemaining: 0,
+              postCount: 0,
+              username: '',
+              postingKey: '',
+              age: 0,
+              created: '',
+              votingPower: 0,
+              remainHours: 0,
+              reputation: 0,
+              vestingSteem: 0,
+              receivedVestingSteem: 0,
+              weight: 0,
+            },
+            search: {
+              tag: 'kr',
+              limit: 100,
+              after30min: true
+            },
+            discussions: [],
+            runAutoVote: false
           }
-        );
-      }
-      
-      function load() {
-        username = document.form.username.value;
-        getAccount();
-        getDiscussionsByCreated();
-      }
+        },
+        computed: {
+          username: {
+            get() {
+              return window.localStorage.getItem('username')
+            },
+            set(value) {
+              window.localStorage.setItem('username', value)
+            }
+          },
+          iswif () {
+            return steem.auth.isWif(this.postingKey)
+          },
+          totalVestingSteem () {
+            return this.vestingSteem + this.receivedVestingSteem
+          }
+        },
+        created () {
+          if( this.username ) {
+            this.getAccount();
+          }
+        },
+        methods: {
+          lookupAccountNames () {
+            steem.api.lookupAccountNames([this.username], (err, result) => {
+              if (result[0]) {
+                this.style.username = 'alert-danger';
+              } else {
+                this.style.username = 'alert-success';
+              }
+            });
+          },
+          // 사용자 정보 조회
+          getAccount () {
+            steem.api.getAccounts([this.username], (e1, accounts) => {
+              if (e1) return alert(e1)
+              var account = accounts[0];
+              console.log(accounts)
+              var elapsed_seconds = (new Date() - new Date(account.last_vote_time + "Z")) / 1000; // 마지막 보팅 후 경과 시간
+              var regenerated_power = (10000 * elapsed_seconds) / (60 * 60 * 24 * 5); // 재생된 보팅파워
+              var current_power = Math.round(Math.min(account.voting_power + regenerated_power, 10000)); // 현재 보팅파워
+              console.log('current_power:', current_power);
+              this.account.votingPower = (current_power / 100);
+
+              // 보팅파워 남은 재생시간
+              this.account.remainHours = (10000 - current_power) * (5 * 60 * 60 * 24) / (60 * 60 * 10000)
+
+              // this.reputation = steem.formatter.reputation(account.reputation); // 평판
+              this.account.reputation = (Math.max(Math.log10(Math.abs(account.reputation)) - 9, 0) * ((account.reputation >= 0) ? 1 : -1) * 9 + 25).toFixed(2);
+              this.account.postCount = account.post_count;
+              
+              const created = new Date(account.created + "Z");
+              this.account.age = Math.floor((new Date() - created) / (1000 * 60 * 60 * 24));
+              this.account.created = created.toLocaleDateString("ko-KR");
+              this.account.username = account.name;
+
+              steem.api.getState("/@" + account.name, (e2, state) => {
+                if (e2) return alert(e2)
+                console.log(state)
+                const vestingSteem = steem.formatter.vestingSteem(account, state.props);
+                this.account.vestingSteem = vestingSteem.toFixed(3);
+                
+                var receivedVestingShares = parseFloat(account.received_vesting_shares.split(" ")[0]);
+                if ( receivedVestingShares ) {
+                  var totalVestingShares = parseFloat(state.props.total_vesting_shares.split(" ")[0]);
+                  var totalVestingFundSteem = parseFloat(state.props.total_vesting_fund_steem.split(" ")[0]);
+                  const receivedVestingSteem = totalVestingFundSteem * (receivedVestingShares / totalVestingShares);
+                  this.account.receivedVestingSteem = receivedVestingSteem.toFixed(3);
+                }
+
+                const STEEMIT_BANDWIDTH_AVERAGE_WINDOW_SECONDS = 60 * 60 * 24 * 7;
+                const vestingShares = parseFloat(account.vesting_shares.split(" ")[0])
+                const max_virtual_bandwidth = parseInt(state.props.max_virtual_bandwidth, 10)
+                const average_bandwidth = parseInt(account.average_bandwidth, 10)
+                const delta_time = (new Date() - new Date(account.last_bandwidth_update + 'Z')) / 1000
+                const bandwidthAllocated = Math.round((max_virtual_bandwidth * (vestingShares + receivedVestingShares) / totalVestingShares)/ 1000000)
+                let new_bandwidth = 0
+                if (delta_time < STEEMIT_BANDWIDTH_AVERAGE_WINDOW_SECONDS) {
+                  new_bandwidth = (((STEEMIT_BANDWIDTH_AVERAGE_WINDOW_SECONDS - delta_time) * average_bandwidth) / STEEMIT_BANDWIDTH_AVERAGE_WINDOW_SECONDS)
+                }
+                new_bandwidth = Math.round(new_bandwidth / 1000000);
+                const bandwidth_remaining = 100 - (100 * new_bandwidth / bandwidthAllocated);
+                this.account.bandwidthRemaining = bandwidth_remaining.toFixed(2);
+              });
+            });
+          },
+          getDiscussions () {
+            console.log('getDiscussions')
+            const query = {
+              tag: this.search.tag, 
+              limit: this.search.limit
+            };
+            steem.api.getDiscussionsByCreated(query, (err, result) => {
+              if(err) return alert(err);
+
+              // 필터 조건 적용
+              const after30min = this.after30min;
+              const items = result.filter(item => {
+
+                // 내가 보팅한 글인지 체크
+                const voters = item.active_votes.map(vote => vote.voter);
+                item.voted = voters.includes(this.userid);
+                // if( isVoted ) return false; // continue;
+
+                // 다운보팅을 받지 않았고 보팅참여자자가 10명 이하
+                // if( item.net_votes < 0 || item.net_votes > 10) return false;
+
+                const elapsed_minutes = (new Date() - new Date(item.created + 'Z')) / (60 * 1000);// 경과 시간
+                item.elapsed_minutes = Math.floor(elapsed_minutes);
+                // 30분이 지난 글만
+                if( this.search.after30min && elapsed_minutes < 30 ) return false; // continue;
+
+                item.author_reputation = steem.formatter.reputation(item.author_reputation); // 저자 평판
+
+                const json_metadata = JSON.parse(item.json_metadata);
+                if( json_metadata.image && json_metadata.image.length > 0) item.main_iamge = json_metadata.image[0]
+
+                item.payout = (parseFloat( item.total_payout_value.split(" ")[0]) + parseFloat(item.curator_payout_value.split(" ")[0]) + parseFloat(item.pending_payout_value.split(" ")[0])).toFixed(2);
+
+                // item.text = item.body.replace(/<\/?[^>]+(>|$)/g, "");
+                item.text = item.body.replace(/!\[[^\]]*\]\([^\s]+\)/g, '').replace(/<\/?[^>]+(>|$)/g, "")
+
+                return true;
+              });
+
+              // 보상금 순으로 정렬
+              // items.sort(function(a, b) {
+              //   return b.vote_rshares - a.vote_rshares;
+              // });
+
+              // console.log(JSON.stringify(items[0],'',2));
+              this.discussions = items;
+            });
+          },
+          imageLoaded (evt) {
+            // console.log(evt.target);
+          },
+          vote (item) {
+            if( !steem.auth.isWif(this.account.postingKey) ) {
+              this.$refs.postingKey.focus();
+              return false
+            }
+            item.selected = true
+            steem.broadcast.vote(
+              this.account.postingKey,
+              this.account.username, // Voter
+              item.author, // Author
+              item.permlink, // Permlink
+              10000, // Weight (10000 = 100%)
+              (err, result) => {
+                console.log(err, result);
+                if(err) return  alert(err);
+                item.voted = true;
+                item.selected = false
+                this.getAccount();
+              })
+            return true
+          },
+          stopAutoVoting () {
+            this.runAutoVote = false
+            clearTimeout(interval)
+          },
+          startAutoVoting () {
+            if( this.runAutoVote ) {
+              return this.stopAutoVoting()
+            } 
+            const runAuto = () => {
+              if( this.account.votingPower <= 80) {
+                return this.stopAutoVoting()
+              }
+              const item = this.discussions.filter((e) => (!e.voted))[0] || {}
+              console.log(item)
+              if( this.vote(item) ) {
+                interval = setTimeout(runAuto, 1000 * 10)
+              } else {
+                this.runAutoVote = false
+              }
+            }
+            this.runAutoVote = true
+            runAuto()
+          }
+        }
+      });
       </script>
   </body>
 </html>
