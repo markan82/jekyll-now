@@ -7,11 +7,9 @@ tags : ["스팀잇","steemit","vue",vuejs","dapp","블록체인"]
 published: true
 ---
 
-<br>
 
-**[스팀잇(Steemit)](https://steemit.com/@anpigon)**에서 **vuejs**를 이용하여 **스팀잇(Steemit) 기반 앱 개발 강좌**를 연재하고 있습니다.
+**[스팀잇(Steemit)](https://steemit.com/@anpigon)**에서 **vuejs**를 이용하여 **스팀잇(Steemit) 기반 앱 개발 강좌**를 연재하고 있습니다. 많은 관심 부탁드립니다.
 
-<br>
 
 ## 강좌 목록
 
