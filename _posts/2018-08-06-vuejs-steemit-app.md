@@ -10,9 +10,11 @@ published: true
 
 **[스팀잇(Steemit)](https://steemit.com/@anpigon)**에서 **vuejs**를 이용하여 **스팀잇(Steemit) 기반 앱 개발 강좌**를 연재하고 있습니다. 많은 관심 부탁드립니다.
 
+![imgur](https://imgur.com/JyuaZuc.gif)
 
 ## 강좌 목록
 
 - [스팀잇(Steemit)기반 앱 만들기 #1](https://steemit.com/kr/@anpigon/steemit-1-10f53977c621e)
 - [스팀잇(Steemit)기반 앱 만들기 #2 - 최근글 가져오기](https://steemit.com/kr/@anpigon/steemit-2)
 - [스팀잇(Steemit)기반 앱 만들기 #3 - 무한 스크롤 구현하기](https://steemit.com/kr/@anpigon/steemit-3)
+- [스팀잇(Steemit)기반 앱 만들기 #4 - 상세화면 구현하기](https://steemit.com/kr/@anpigon/steemit-4)
