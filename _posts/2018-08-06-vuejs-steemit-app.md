@@ -8,7 +8,9 @@ published: true
 ---
 
 
-**[스팀잇(Steemit)](https://steemit.com/@anpigon)**에서 **vuejs**를 이용하여 **스팀잇(Steemit) 기반 앱 개발 강좌**를 연재하고 있습니다. 많은 관심 부탁드립니다.
+**[스팀잇(Steemit)](https://steemit.com/@anpigon)**에서 **vuejs**를 이용하여 **스팀잇(Steemit) 기반 앱 개발 강좌**를 연재하고 있습니다. 
+
+많은 관심 부탁드립니다.
 
 ![imgur](https://imgur.com/JyuaZuc.gif)
 
