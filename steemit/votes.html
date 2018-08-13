@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <style>
+    th, td, div, p {
+      font-size:12px
+    }
+    </style>
+    </head>
+  <body>
+
+<div id="app">
+  <input v-model="path" />
+  <button @click='getContent'>조회</button>
+  <hr>
+  <div v-if='pendingPayoutValue'>예상보상: ${{ pendingPayoutValue.toFixed(2) }}</div>
+  <div v-if='totalPayoutValue'>
+    지급된 보상: ${{ (totalPayoutValue + curatorPayoutValue).toFixed(2) }}<br>
+    - 저자: ${{ totalPayoutValue.toFixed(2) }}<br>
+    - 큐레이터: ${{ curatorPayoutValue.toFixed(2) }}
+  </div>
+  <hr>
+  <table border=1>
+    <tr><th>Voter</th><th>Weight</th><th>Value</th><th>Curation</th><th>Time</th></tr>
+    <tr v-for="vote in votes">
+      <td>{{ vote.voter }}({{ vote.reputation}})</td>
+      <td>{{ vote.percent }}%</td>
+      <td>${{ vote.value || 0 }}</td>
+      <td>{{ vote.curation || 0 }}</td>
+      <td>{{ Number(vote.time / 60000).toFixed(0) }} 분 후</td>
+    </tr>
+  </table>
+</div>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.js"></script>    
+<script src="//cdn.steemjs.com/lib/latest/steem.min.js"></script>
+<script>
+// window.addEventListener('DOMContentLoaded', function () {  
+  // console.log(post)
+  const app = new Vue({
+    el: '#app',
+    data () {
+      return {
+        path: '@wnrwjd/41pvm6',
+        post: [],
+        rewardBalance: 0,
+        recentClaims: 0,
+        steemPrice: 0
+      }
+    },
+    computed: {
+      votes () {
+        console.log('post', this.post)
+        const n = this.post
+        if (!n || !n.active_votes) return []
+
+        const k = this.rewardBalance / this.recentClaims
+        const S = this.steemPrice
+        
+        // 보상금 총액
+        var  i = "0.000 SBD" != n.pending_payout_value ? parseFloat(n.pending_payout_value.replace(" SBD", "")) : parseFloat(n.total_payout_value.replace(" SBD", "")) + parseFloat(n.curator_payout_value.replace(" SBD", ""))
+
+        let s = 0, l = 0
+        n.active_votes.forEach(function(e) {
+          s += parseFloat(e.rshares), // 해당 포스트에 보팅된 총 리워드 계산
+          l += parseFloat(e.weight) // 해당 포스트에 보팅된 총 가중치 계산
+        })
+
+        return n.active_votes.map(e => {
+          var upvoteValue, curation
+          if ("0.000 SBD" != n.pending_payout_value) {
+            // 페이아웃 이전
+            upvoteValue = e.rshares * k * S; // 내가 업보팅한 금액
+            curation = (e.weight / n.total_vote_weight * i * .25 / S).toFixed(3) + " SP"; // 내가 받을 큐레이션 보상
+          } else {
+            // 페이아웃 이후
+            const totalPayoutValue = parseFloat(n.total_payout_value.replace(' SBD', ''))       // 해당 컨텐츠의 저자 보상
+            const curatorPayoutValue = parseFloat(n.curator_payout_value.replace(' SBD', '')) // 해당 컨텐츠의 큐레이션 보상
+            // console.log(totalPayoutValue, curatorPayoutValue, totalPayoutValue + curatorPayoutValue)
+            var o = totalPayoutValue / (totalPayoutValue + curatorPayoutValue);
+            upvoteValue = e.rshares / s * parseFloat(totalPayoutValue / o), // 내가 업보팅한 금액
+            curation = (e.weight / l * curatorPayoutValue).toFixed(3) + " SBD" // 내가 받을 큐레이션 보상
+            var sp = (e.weight / l * curatorPayoutValue)
+          }
+          return {
+            voter: '@' + e.voter,
+            percent: e.percent / 100,
+            value: upvoteValue.toFixed(3),
+            curation: curation,
+            // reputation: (Math.max(Math.log10(Math.abs(e.reputation)) - 9, 0) * ((e.reputation >= 0) ? 1 : -1) * 9 + 25).toFixed(0)
+            reputation: steem.formatter.reputation(e.reputation),
+            time: new Date(e.time) - new Date(this.post.created)
+          }
+        }).sort(function (a, b) {
+          return a.time - b.time;
+        })
+      }
+    },
+    created () {
+     this.init()
+    },
+    methods: {
+      async init () {
+        const global = await steem.api.getDynamicGlobalPropertiesAsync()
+
+        // RewardFund 조회
+        const rewardFund = await steem.api.getRewardFundAsync('post')
+        console.log('rewardFund', rewardFund)
+        this.rewardBalance = Number(rewardFund.reward_balance.replace(' STEEM', ''))
+        this.recentClaims = Number(rewardFund.recent_claims)
+
+        // 현재 스팀 가격 조회
+        const price = await steem.api.getCurrentMedianHistoryPriceAsync()
+        this.steemPrice = Number(price.base.replace(' SBD', '')) / Number(price.quote.replace(' STEEM', ''))
+        console.log(price, this.steemPrice)
+      },
+      async getContent () {
+        const params = this.path.split('/')
+        const post = await steem.api.getContentAsync(params[0].replace('@', ''), params[1])
+
+        this.post = post
+        this.pendingPayoutValue = parseFloat(post.pending_payout_value.replace(' SBD', '')) // 저자 보상 
+        this.totalPayoutValue = parseFloat(post.total_payout_value.replace(' SBD', '')) // 저자 보상
+        this.curatorPayoutValue = parseFloat(post.curator_payout_value.replace(' SBD', '')) // 큐레이션 보상
+      }
+    }
+  })
+// })
+
+const data = // 20180813163425
+// https://steemit.com/appics/@tradingideas/backend-alpha-kw-31-appics-im-387.json
+
+{
+  "post": {
+    "id": 59555190,
+    "author": "tradingideas",
+    "permlink": "backend-alpha-kw-31-appics-im-387",
+    "category": "appics",
+    "parent_author": "",
+    "parent_permlink": "appics",
+    "title": "Appics 첫 포스팅. 회사 밖 전경. 회사가 제일 시원한 듯. 더위야 빨리 가라. 스팀도 가고 appics도 가자!First posting ...",
+    "body": "...  using Appics.\nScenery from office. Go Steem and Appics<br/><br/>![15b976ca424fb80033825682ba2a811a](https://s3.eu-central-1.amazonaws.com/backend-alpha-kw-31/15b976ca424fb80033825682ba2a811a)<br/><br/>Powered by APPICS - visit us at [appics.com](https://appics.com?ref=steemit.com/387)",
+    "json_metadata": {
+      "tags": [
+        "appics",
+        "kr",
+        "introduceyourself",
+        "life",
+        "lifestyle"
+      ],
+      "app": "steemit/0.1",
+      "image": [
+        "https://s3.eu-central-1.amazonaws.com/backend-alpha-kw-31/15b976ca424fb80033825682ba2a811a"
+      ],
+      "links": [
+        "https://appics.com?ref=steemit.com/387"
+      ],
+      "format": "markdown"
+    },
+    "last_update": "2018-08-13T02:55:30",
+    "created": "2018-08-13T02:46:30",
+    "active": "2018-08-13T03:45:15",
+    "last_payout": "1970-01-01T00:00:00",
+    "depth": 0,
+    "children": 9,
+    "net_rshares": "1149001119874",
+    "abs_rshares": "1149001119874",
+    "vote_rshares": "1149001119874",
+    "children_abs_rshares": "1149001119874",
+    "cashout_time": "2018-08-20T02:46:30",
+    "max_cashout_time": "1969-12-31T23:59:59",
+    "total_vote_weight": 1072174,
+    "reward_weight": 10000,
+    "total_payout_value": "0.000 SBD",
+    "curator_payout_value": "0.000 SBD",
+    "author_rewards": 0,
+    "net_votes": 26,
+    "root_author": "tradingideas",
+    "root_permlink": "backend-alpha-kw-31-appics-im-387",
+    "max_accepted_payout": "1000000.000 SBD",
+    "percent_steem_dollars": 10000,
+    "allow_replies": true,
+    "allow_votes": true,
+    "allow_curation_rewards": true,
+    "beneficiaries": [
+      
+    ],
+    "url": "/appics/@tradingideas/backend-alpha-kw-31-appics-im-387",
+    "root_title": "Appics 첫 포스팅. 회사 밖 전경. 회사가 제일 시원한 듯. 더위야 빨리 가라. 스팀도 가고 appics도 가자!First posting ...",
+    "pending_payout_value": "1.688 SBD",
+    "total_pending_payout_value": "0.000 STEEM",
+    "active_votes": [
+      {
+        "voter": "janne",
+        "weight": 507,
+        "rshares": 1063988527,
+        "percent": 4000,
+        "reputation": "255646206168",
+        "time": "2018-08-13T03:23:15"
+      },
+      {
+        "voter": "donghyunkim",
+        "weight": 3286,
+        "rshares": "6891738914",
+        "percent": 10000,
+        "reputation": "900731993012",
+        "time": "2018-08-13T05:05:54"
+      },
+      {
+        "voter": "rizasukma",
+        "weight": 33649,
+        "rshares": "70565657441",
+        "percent": 10000,
+        "reputation": "17894465419193",
+        "time": "2018-08-13T03:20:51"
+      },
+      {
+        "voter": "seunglimdaddy",
+        "weight": 24417,
+        "rshares": "51206724376",
+        "percent": 800,
+        "reputation": "37622730055601",
+        "time": "2018-08-13T03:37:15"
+      },
+      {
+        "voter": "agawolf",
+        "weight": 5404,
+        "rshares": "11331445100",
+        "percent": 100,
+        "reputation": "17495356124737",
+        "time": "2018-08-13T04:55:03"
+      },
+      {
+        "voter": "ilovemylife",
+        "weight": 31443,
+        "rshares": "65940900128",
+        "percent": 1600,
+        "reputation": "21842074981197",
+        "time": "2018-08-13T03:17:18"
+      },
+      {
+        "voter": "earncrypto",
+        "weight": 865,
+        "rshares": "5443787360",
+        "percent": 10000,
+        "reputation": "162691003659",
+        "time": "2018-08-13T02:51:30"
+      },
+      {
+        "voter": "rabeel",
+        "weight": 10845,
+        "rshares": "17957214911",
+        "percent": 5000,
+        "reputation": "28676027006941",
+        "time": "2018-08-13T03:05:30"
+      },
+      {
+        "voter": "thehipsterguru",
+        "weight": 67546,
+        "rshares": "244048977496",
+        "percent": 5000,
+        "reputation": "1128204155455",
+        "time": "2018-08-13T02:51:15"
+      },
+      {
+        "voter": "tradingideas",
+        "weight": 30074,
+        "rshares": "165978182555",
+        "percent": 10000,
+        "reputation": "31188841603152",
+        "time": "2018-08-13T02:52:12"
+      },
+      {
+        "voter": "banjjakism",
+        "weight": 4247,
+        "rshares": "8906985202",
+        "percent": 2300,
+        "reputation": "23978516851991",
+        "time": "2018-08-13T03:45:48"
+      },
+      {
+        "voter": "millionfist",
+        "weight": 2747,
+        "rshares": "5761405295",
+        "percent": 10000,
+        "reputation": "9601647703940",
+        "time": "2018-08-13T04:24:45"
+      },
+      {
+        "voter": "gumagreat",
+        "weight": 7466,
+        "rshares": "15657219485",
+        "percent": 10000,
+        "reputation": "4067516257511",
+        "time": "2018-08-13T07:31:45"
+      },
+      {
+        "voter": "isi3",
+        "weight": 13204,
+        "rshares": "27690491259",
+        "percent": 3000,
+        "reputation": "351551294829",
+        "time": "2018-08-13T05:01:36"
+      },
+      {
+        "voter": "h-jin",
+        "weight": 290,
+        "rshares": 608513912,
+        "percent": 10000,
+        "reputation": "115824377124",
+        "time": "2018-08-13T03:30:36"
+      },
+      {
+        "voter": "relaxkim",
+        "weight": 710,
+        "rshares": 1489415340,
+        "percent": 10000,
+        "reputation": "3054502565502",
+        "time": "2018-08-13T03:28:42"
+      },
+      {
+        "voter": "stella12",
+        "weight": 25773,
+        "rshares": "48548416122",
+        "percent": 3400,
+        "reputation": "10829122671764",
+        "time": "2018-08-13T03:03:12"
+      },
+      {
+        "voter": "babymir",
+        "weight": 4199,
+        "rshares": "8805326487",
+        "percent": 10000,
+        "reputation": "456294362483",
+        "time": "2018-08-13T03:41:21"
+      },
+      {
+        "voter": "onehand",
+        "weight": 1361,
+        "rshares": 2854725597,
+        "percent": 500,
+        "reputation": "11644024309866",
+        "time": "2018-08-13T06:00:00"
+      },
+      {
+        "voter": "donekim",
+        "weight": 56236,
+        "rshares": "62290814986",
+        "percent": 10000,
+        "reputation": "6169530638846",
+        "time": "2018-08-13T03:14:54"
+      },
+      {
+        "voter": "steemladder",
+        "weight": 441,
+        "rshares": "4377247928",
+        "percent": 500,
+        "reputation": "276015616848",
+        "time": "2018-08-13T02:46:42"
+      },
+      {
+        "voter": "yungonkim",
+        "weight": 98182,
+        "rshares": "205901915783",
+        "percent": 1800,
+        "reputation": "3676923037198",
+        "time": "2018-08-13T03:24:18"
+      },
+      {
+        "voter": "anpigon",
+        "weight": 422,
+        "rshares": 716175620,
+        "percent": 10000,
+        "reputation": "243433359254",
+        "time": "2018-08-13T03:16:36"
+      },
+      {
+        "voter": "glory7",
+        "weight": 42071,
+        "rshares": "88229232388",
+        "percent": 1700,
+        "reputation": "5372554476313",
+        "time": "2018-08-13T04:00:33"
+      },
+      {
+        "voter": "culam92",
+        "weight": 347,
+        "rshares": 941994585,
+        "percent": 10000,
+        "reputation": "244240650306",
+        "time": "2018-08-13T02:47:57"
+      },
+      {
+        "voter": "joajina00",
+        "weight": 12299,
+        "rshares": "25792623077",
+        "percent": 3000,
+        "reputation": "137056006178",
+        "time": "2018-08-13T03:28:45"
+      }
+    ],
+    "replies": [
+      
+    ],
+    "author_reputation": "31188841603152",
+    "promoted": "0.000 SBD",
+    "body_length": 0,
+    "reblogged_by": [
+      
+    ]
+  },
+  "status": "200"
+}
+</script>
+</body>
+</html>
