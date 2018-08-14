@@ -102,24 +102,38 @@ anpigon 님은 STEEM POWER 를 임대 받고 있습니다. 임대 받는 양은 
                       <input type="text" class="form-control" name="tag" placeholder="Tag" aria-label="tag" aria-describedby="basic-addonw" v-model="search.tag">
                     </div>  
                   </div>
+                  <div class="form-row">
+                    <div class="form-group col-6">
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">보팅 수</span>
+                        </div>
+                        <input type="number" class="form-control" v-model="search.voteCount">
+                        <div class="input-group-append">
+                          <span class="input-group-text">이하</span>
+                        </div>
+                      </div>  
+                    </div> 
+                    <div class="form-group col-6">
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">저자 명성</span>
+                        </div>
+                        <input type="number" class="form-control" v-model="search.reputation">
+                        <div class="input-group-append">
+                          <span class="input-group-text">이상</span>
+                        </div>
+                      </div>  
+                    </div> 
+                  </div>
                   <div class="form-group">
                     <div class="form-check">
                       <input class="form-check-input" type="checkbox" v-model='search.after30min' id="check1">
                       <label class="form-check-label" for="check1">
-                        게시한지 30분이 지난 글
+                        게시한지 30분이 지난 글만
                       </label>
                     </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" v-model='search.voteCountZero' id="check2">
-                        <label class="form-check-label" for="check2">
-                          보팅수 0
-                        </label>
-                      </div>
                   </div>
-                  <div class="form-check">
-                      <label for="reputation">명성: </label>
-                      <input type="number" name="reputation" id='reputation' placeholder="reputation" v-model="search.reputation"> 이상
-                </div>
                 <!-- 보팅 웨이트
                 게시글 등록시간 -->
                   <!-- <div class="form-group">
@@ -140,7 +154,7 @@ anpigon 님은 STEEM POWER 를 임대 받고 있습니다. 임대 받는 양은 
                       <button type="button" v-bind:class="['btn', runAutoVote?'btn-warning':'btn-success']" @click.prevent='startAutoVoting'>{{ (runAutoVote ? 'Stop' : 'Start') +  ' Auto Voting' }}</button>
                     </div> -->
                     <div class="col text-right">
-                      <button type="submit" class="btn btn-primary" @click.prevent="getDiscussions">Search</button>
+                      <button type="submit" class="btn btn-primary" @click.prevent="getDiscussions">검색하기</button>
                     </div>
                   </div>
                 </form>
@@ -149,23 +163,28 @@ anpigon 님은 STEEM POWER 를 임대 받고 있습니다. 임대 받는 양은 
           </div>
         </div>
 
-        <div class="media list-group-item" v-for="d in discussions">
-          <img class="mr-3" v-if="d.main_iamge" :src="'https://steemitimages.com/96x96/' + d.main_iamge" alt="Generic placeholder image">
-          <div class="media-body">
-            <a :href="'https://steemit.com' + d.url" onclick='return !window.open(this.href)' class='list-group-item-action'>
-              <h5 class="mt-0">{{d.title}}</h5>
-              <p style='color:grey'>{{ d.text }}</p>
-            </a>
-            <small> 
-              $ {{ d.payout }} ㆍ
-              보팅 {{ d.net_votes }}  ㆍ
-              댓글 {{ d.children }}  ㆍ
-              {{ d.elapsed_minutes }} 분 전
-              by <a :href="'https://steemit.com/@' + d.author" onclick='return !window.open(this.href)'>{{ d.author }}</a> ({{ d.author_reputation }})
-            </small>
+        <div class='list-group-item' v-for="d in discussions">
+          <div class="media">
+            <img class="mr-3" v-if="d.main_iamge" :src="'https://steemitimages.com/96x96/' + d.main_iamge" alt="Generic placeholder image">
+            <div class="media-body">
+              <a :href="'https://steemit.com' + d.url" onclick='return !window.open(this.href)' class='list-group-item-action'>
+                <h6 class="mt-0">{{d.title}}</h6>
+                <p class='mb-1' style='color:grey;font-size:0.8em;word-break:break-all;'>{{ d.text }}</p>
+              </a>
+              <small> 
+                $ {{ d.payout }} ㆍ
+                보팅 {{ d.net_votes }}  ㆍ
+                댓글 {{ d.children }}  ㆍ
+                {{ d.elapsed_minutes }} 분 전
+                by <a :href="'https://steemit.com/@' + d.author" onclick='return !window.open(this.href)'>{{ d.author }}</a> ({{ d.author_reputation }})
+              </small>
+            </div>
           </div>
         </div>
-         
+        <div v-if="search.permlink" style='text-align:center'><a href='#' @click.prevent="more">더 보기</a></div>
+        <div class="progress" v-show="search.busy">
+          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
+        </div>
         <!-- <div class="row">
           <div class="mb-2 col-xs-12 col-md-6 col-xl-4" v-for="d in discussions">
             <div :class="['card', {'selected' : d.selected}]">
@@ -228,8 +247,12 @@ anpigon 님은 STEEM POWER 를 임대 받고 있습니다. 임대 받는 양은 
               tag: 'kr',
               limit: 100,
               after30min: true,
-              voteCountZero: true,
-              reputation: 50
+              // voteCountZero: true,
+              voteCount: 0,
+              reputation: 30,
+              author: null,
+              permlink: null,
+              busy: false
             },
             discussions: [],
             runAutoVote: false
@@ -313,12 +336,25 @@ anpigon 님은 STEEM POWER 를 임대 받고 있습니다. 임대 받는 양은 
               });
             });
           },
-          getDiscussions () {
-            // console.log('getDiscussions')
+          more () {
+            this.getDiscussions(null, true)
+          },
+          getDiscussions (evt, more) {
+            console.log('getDiscussions', more)
+            if(!more) {
+              this.discussions = []
+              this.search.permlink = null
+              this.search.author = null
+            }
+
             const query = {
               tag: this.search.tag, 
-              limit: this.search.limit
+              limit: this.search.limit,
+              start_permlink: this.search.permlink, 
+              start_author: this.search.author
             };
+
+            this.search.busy = true
             steem.api.getDiscussionsByCreated(query, (err, result) => {
               if(err) return alert(err);
               console.log(result)
@@ -326,6 +362,9 @@ anpigon 님은 STEEM POWER 를 임대 받고 있습니다. 임대 받는 양은 
               // 필터 조건 적용
               const after30min = this.after30min;
               const items = result.filter(item => {
+
+                this.search.author = item.author
+                this.search.permlink = item.permlink
 
                 if( !item.allow_curation_rewards ) return false; // 보상없음
 
@@ -342,10 +381,12 @@ anpigon 님은 STEEM POWER 를 임대 받고 있습니다. 임대 받는 양은 
                 // 30분이 지난 글만
                 if( this.search.after30min && elapsed_minutes < 30 ) return false; // continue;
 
-                if( this.search.voteCountZero && item.net_votes !== 0 ) {
-                  return false;
-                  // continue
-                }
+                // if( this.search.voteCountZero && item.net_votes !== 0 ) {
+                //   return false;
+                //   // continue
+                // }
+                // console.log('!!!: ', item.net_votes - this.search.voteCount)
+                if( item.net_votes < 0 || item.net_votes > this.search.voteCount ) return false;
 
                 item.author_reputation = steem.formatter.reputation(item.author_reputation); // 저자 평판
 
@@ -358,7 +399,7 @@ anpigon 님은 STEEM POWER 를 임대 받고 있습니다. 임대 받는 양은 
 
                 // item.text = item.body.replace(/<\/?[^>]+(>|$)/g, "");
                 item.text = item.body.replace(/!\[[^\]]*\]\([^\s]+\)/g, '').replace(/<\/?[^>]+(>|$)/g, "").substr(0, 100)
-
+                
                 return true;
               });
 
@@ -366,9 +407,19 @@ anpigon 님은 STEEM POWER 를 임대 받고 있습니다. 임대 받는 양은 
               // items.sort(function(a, b) {
               //   return b.vote_rshares - a.vote_rshares;
               // });
+              if(result.length < 100) {
+                this.search.author = null
+                this.search.permlink = null
+              }
+
+              // console.log(this.search.author, this.search.permlink)
 
               // console.log(JSON.stringify(items[0],'',2));
-              this.discussions = items;
+              this.discussions = [
+                ...this.discussions,
+                ...items
+                ];
+              this.search.busy = false
             });
           },
           imageLoaded (evt) {
