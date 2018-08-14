@@ -327,6 +327,8 @@ anpigon 님은 STEEM POWER 를 임대 받고 있습니다. 임대 받는 양은 
               const after30min = this.after30min;
               const items = result.filter(item => {
 
+                if( !item.allow_curation_rewards ) return false; // 보상없음
+
                 // 내가 보팅한 글인지 체크
                 const voters = item.active_votes.map(vote => vote.voter);
                 item.voted = voters.includes(this.userid);
