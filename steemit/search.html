@@ -39,11 +39,11 @@
                 </div>
                 <p class="card-text"><small class="text-muted">full in {{ account.remainHours }} hours</small></p>
 
-                <h6 class="card-subtitle mb-1 text-muted">Bandwidth Remaining</h6>
+                <!-- <h6 class="card-subtitle mb-1 text-muted">Bandwidth Remaining</h6>
                 <div class="progress mb-3">
                   <div class="progress-bar progress-bar-striped bg-success" role="progressbar" 
                   :style="'width: ' + account.bandwidthRemaining + '%'" :aria-valuenow="account.bandwidthRemaining" aria-valuemin="0" aria-valuemax="100">{{ account.bandwidthRemaining }}%</div>
-                </div>
+                </div> -->
 
                 <h6 class="card-subtitle mb-1 text-muted">Reputation</h6>
                 <p class="card-text">{{ account.reputation }} <small class="text-muted">({{ account.postCount }} posts)</small></p>
@@ -53,9 +53,9 @@
                 <!-- 스팀잇에서의 영향력을 나타냅니다. 스팀 파워가 높을수록 보팅 금액이 더 높아지고, 큐레이션 보상도 더 많이 받을 수 있습니다.
 anpigon 님은 STEEM POWER 를 임대 받고 있습니다. 임대 받는 양은 가입 시기에 따라 가변적입니다. -->
                 
-                <h6 class="card-subtitle mb-1 text-muted">Age</h6>
+                <!-- <h6 class="card-subtitle mb-1 text-muted">Age</h6>
                 <p class="card-text mb-0">{{ account.age }} days <small class="text-muted">({{ account.created }})</small></p>
-                
+                 -->
                 <!-- 
                 <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
                 <a href="#" class="btn btn-primary">Go somewhere</a> -->
@@ -104,12 +104,22 @@ anpigon 님은 STEEM POWER 를 임대 받고 있습니다. 임대 받는 양은 
                   </div>
                   <div class="form-group">
                     <div class="form-check">
-                      <input class="form-check-input" type="checkbox" v-model='search.after30min' id="defaultCheck1">
-                      <label class="form-check-label" for="defaultCheck1">
+                      <input class="form-check-input" type="checkbox" v-model='search.after30min' id="check1">
+                      <label class="form-check-label" for="check1">
                         게시한지 30분이 지난 글
                       </label>
                     </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" v-model='search.voteCountZero' id="check2">
+                        <label class="form-check-label" for="check2">
+                          보팅수 0
+                        </label>
+                      </div>
                   </div>
+                  <div class="form-check">
+                      <label for="reputation">명성: </label>
+                      <input type="number" name="reputation" id='reputation' placeholder="reputation" v-model="search.reputation"> 이상
+                </div>
                 <!-- 보팅 웨이트
                 게시글 등록시간 -->
                   <!-- <div class="form-group">
@@ -139,8 +149,25 @@ anpigon 님은 STEEM POWER 를 임대 받고 있습니다. 임대 받는 양은 
           </div>
         </div>
 
-        <div class="row">
-          <div class=" mb-2 col-6 col-xl-4" v-for="d in discussions">
+        <div class="media list-group-item" v-for="d in discussions">
+          <img class="mr-3" v-if="d.main_iamge" :src="'https://steemitimages.com/96x96/' + d.main_iamge" alt="Generic placeholder image">
+          <div class="media-body">
+            <a :href="'https://steemit.com' + d.url" onclick='return !window.open(this.href)' class='list-group-item-action'>
+              <h5 class="mt-0">{{d.title}}</h5>
+              <p style='color:grey'>{{ d.text }}</p>
+            </a>
+            <small> 
+              $ {{ d.payout }} ㆍ
+              보팅 {{ d.net_votes }}  ㆍ
+              댓글 {{ d.children }}  ㆍ
+              {{ d.elapsed_minutes }} 분 전
+              by <a :href="'https://steemit.com/@' + d.author" onclick='return !window.open(this.href)'>{{ d.author }}</a> ({{ d.author_reputation }})
+            </small>
+          </div>
+        </div>
+         
+        <!-- <div class="row">
+          <div class="mb-2 col-xs-12 col-md-6 col-xl-4" v-for="d in discussions">
             <div :class="['card', {'selected' : d.selected}]">
               <div class="card-img-top" style='min-height:200px;max-height:200px; overflow: hidden;'>
                 <img v-if="d.main_iamge" :src="d.main_iamge" alt="Card image cap" style='width:100%' @load="imageLoaded">
@@ -150,12 +177,9 @@ anpigon 님은 STEEM POWER 를 임대 받고 있습니다. 임대 받는 양은 
                 <h5 class="card-title text-truncate"><a :href="'https://steemit.com' + d.url" onclick='return !window.open(this.href)' :title='d.root_title'>{{d.root_title}}</a></h5>
                 <p class="card-text text-truncate">{{ d.text }}</p>
                 <p class="card-text text-muted">
-                  <button  v-if='!d.voted' @click.prevent="vote(d)" class="btn btn-light pl-0 pr-0 pt-0 pb-0"><i class="material-icons md-24 md-dark md-inactive">thumb_up_alt</i> </button>
-                  <i class="material-icons md-24 md-dark md-active" v-if='d.voted'>thumb_up_alt</i>$ {{ d.payout }} <span class='ml-2 mr-2'>|</span>
-                  <i class="material-icons md-24 md-dark">expand_less</i> {{ d.net_votes }} <span class='ml-2 mr-2'>|</span>
-                  <i class="material-icons md-24 md-dark">forum</i> {{ d.children }}
-                <!-- </p>
-                <a href="#" class="btn btn-primary">Go somewhere</a> -->
+                  $ {{ d.payout }} ㆍ
+                  보팅: {{ d.net_votes }}  ㆍ
+                  댓글: {{ d.children }}
               </div>
               <div class="card-footer text-muted">
                 <small> 
@@ -166,7 +190,7 @@ anpigon 님은 STEEM POWER 를 임대 받고 있습니다. 임대 받는 양은 
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
            
       </div><!-- /.container -->
     </div>            
@@ -203,7 +227,9 @@ anpigon 님은 STEEM POWER 를 임대 받고 있습니다. 임대 받는 양은 
             search: {
               tag: 'kr',
               limit: 100,
-              after30min: true
+              after30min: true,
+              voteCountZero: true,
+              reputation: 50
             },
             discussions: [],
             runAutoVote: false
@@ -288,13 +314,14 @@ anpigon 님은 STEEM POWER 를 임대 받고 있습니다. 임대 받는 양은 
             });
           },
           getDiscussions () {
-            console.log('getDiscussions')
+            // console.log('getDiscussions')
             const query = {
               tag: this.search.tag, 
               limit: this.search.limit
             };
             steem.api.getDiscussionsByCreated(query, (err, result) => {
               if(err) return alert(err);
+              console.log(result)
 
               // 필터 조건 적용
               const after30min = this.after30min;
@@ -313,7 +340,14 @@ anpigon 님은 STEEM POWER 를 임대 받고 있습니다. 임대 받는 양은 
                 // 30분이 지난 글만
                 if( this.search.after30min && elapsed_minutes < 30 ) return false; // continue;
 
+                if( this.search.voteCountZero && item.net_votes !== 0 ) {
+                  return false;
+                  // continue
+                }
+
                 item.author_reputation = steem.formatter.reputation(item.author_reputation); // 저자 평판
+
+                if( item.author_reputation < search.reputation ) return false;
 
                 const json_metadata = JSON.parse(item.json_metadata);
                 if( json_metadata.image && json_metadata.image.length > 0) item.main_iamge = json_metadata.image[0]
@@ -321,7 +355,7 @@ anpigon 님은 STEEM POWER 를 임대 받고 있습니다. 임대 받는 양은 
                 item.payout = (parseFloat( item.total_payout_value.split(" ")[0]) + parseFloat(item.curator_payout_value.split(" ")[0]) + parseFloat(item.pending_payout_value.split(" ")[0])).toFixed(2);
 
                 // item.text = item.body.replace(/<\/?[^>]+(>|$)/g, "");
-                item.text = item.body.replace(/!\[[^\]]*\]\([^\s]+\)/g, '').replace(/<\/?[^>]+(>|$)/g, "")
+                item.text = item.body.replace(/!\[[^\]]*\]\([^\s]+\)/g, '').replace(/<\/?[^>]+(>|$)/g, "").substr(0, 100)
 
                 return true;
               });
