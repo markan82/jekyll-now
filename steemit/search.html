@@ -347,7 +347,7 @@ anpigon 님은 STEEM POWER 를 임대 받고 있습니다. 임대 받는 양은 
 
                 item.author_reputation = steem.formatter.reputation(item.author_reputation); // 저자 평판
 
-                if( item.author_reputation < search.reputation ) return false;
+                if( item.author_reputation < this.search.reputation ) return false;
 
                 const json_metadata = JSON.parse(item.json_metadata);
                 if( json_metadata.image && json_metadata.image.length > 0) item.main_iamge = json_metadata.image[0]
