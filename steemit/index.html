@@ -57,7 +57,13 @@
                 <h6 class="card-subtitle mb-1 text-muted">보트 가치</h6>
                 <p class="card-text">${{ (voteValue || 0) | toFixed }}</p>
                 <h6 class="card-subtitle mb-1 text-muted">스팀 파워</h6>
-                <p class="card-text">{{ totalVestingSteem | toFixed }} STEEM <small v-if="receivedVestingSteem > 0" class="text-muted">(+{{ receivedVestingSteem | toFixed  }} STEEM)</small></p>
+                <p class="card-text">
+                  {{ totalVestingSteem | toFixed }} STEEM
+                  <small class="text-muted" v-if="receivedVestingSteem > 0 || delegatedVestinSteem > 0">(
+                    <span v-if="receivedVestingSteem > 0">+{{ receivedVestingSteem | toFixed }}</span>
+                    <span v-if="delegatedVestinSteem > 0">-{{ delegatedVestinSteem | toFixed }}</span>
+                  STEEM)</small>
+                </p>
                 <!-- 스팀잇에서의 영향력을 나타냅니다. 스팀 파워가 높을수록 보팅 금액이 더 높아지고, 큐레이션 보상도 더 많이 받을 수 있습니다.
                   anpigon 님은 STEEM POWER 를 임대 받고 있습니다. 임대 받는 양은 가입 시기에 따라 가변적입니다. -->
 
@@ -136,6 +142,7 @@
             reputation: 0,
             vestingSteem: 0,
             receivedVestingSteem: 0,
+            delegatedVestinSteem: 0,
             voteWeight: 100,
             // Global Properties
             totalVestingFundSteem: 0,
@@ -165,7 +172,7 @@
             return (this.calc.vestingSteem / (this.totalVestingFundSteem / this.totalVestingShares) * rate * (this.rewardBalance / this.recentClaims) * this.steemPrice)
           },
           totalVestingSteem () {
-            return this.vestingSteem + this.receivedVestingSteem
+            return this.vestingSteem + this.receivedVestingSteem - this.delegatedVestinSteem
           },
           remainHoursMessage () {
             const hours = parseInt(this.remainHours)
@@ -200,7 +207,7 @@
               if(accounts.length === 0) throw new Error('사용자 정보를 찾을 수 없습니다.')
               
               const account = accounts[0];
-              console.log(accounts)
+              // console.log(accounts)
 
               window.localStorage.setItem('username', account.name)
               
@@ -224,6 +231,8 @@
                 const receivedVestingSteem = this.totalVestingFundSteem * (receivedVestingShares / this.totalVestingShares);
                 this.receivedVestingSteem = receivedVestingSteem;
               // }
+              const delegatedVestingShares = parseFloat(account.delegated_vesting_shares.split(" ")[0]);
+              this.delegatedVestinSteem = this.totalVestingFundSteem * (delegatedVestingShares / this.totalVestingShares);
             
               const rewardFund = await steem.api.getRewardFundAsync('post')
               // reward balance                                                    
@@ -240,7 +249,7 @@
               // SBD / STEEM의 가격 비율
               this.steemPrice = base / quote
 
-              this.calc.vestingSteem = (this.vestingSteem + this.receivedVestingSteem).toFixed(3)
+              this.calc.vestingSteem = (this.totalVestingSteem).toFixed(3)
             } catch(err) {
               alert(err)
             }
