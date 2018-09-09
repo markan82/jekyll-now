@@ -48,7 +48,7 @@
         </div>
       </nav>
       <div class="container content">
-        <form class="form-inline">
+        <form class="form-inline" onsubmit="return !loadStat()">
           <div class="input-group mb-3">
             <div class="input-group-prepend">
               <span class="input-group-text" id="basic-addon1">@</span>
@@ -151,12 +151,17 @@
 
       username.value = window.localStorage.getItem('username') || ''
   
-      const query = {
-        tag: username.value,
-        limit: 100
-      }
       
       function loadStat() {
+        if(!username.value) {
+          alert('username를 입력하세요.')
+          return !username.focus();
+        }
+
+        const query = {
+          tag: username.value,
+          limit: 100
+        }
         progress.style.display = '-webkit-box'
         // message.innerHTML = '글 가져오는 중...'
 
