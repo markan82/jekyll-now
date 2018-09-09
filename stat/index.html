@@ -47,7 +47,7 @@
         </div>
       </nav>
       <div class="container content">
-        <form class="form-inline" onsubmit="return !loadStat()">
+        <form class="form-inline" onsubmit="loadStat();return false">
           <div class="input-group mb-3">
             <div class="input-group-prepend">
               <span class="input-group-text" id="basic-addon1">@</span>
@@ -154,7 +154,7 @@
       function loadStat() {
         if(!username.value) {
           alert('username를 입력하세요.')
-          return !username.focus();
+          return username.focus()
         }
 
         const query = {
