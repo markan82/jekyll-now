@@ -242,13 +242,21 @@ nav {
 //
 
 .posts > .post {
-  padding-bottom: 2em;
+  padding-bottom: 1em;
   border-bottom: 1px solid $lightGray;
 }
 
 .posts > .post:last-child {
   padding-bottom: 1em;
   border-bottom: none;
+}
+
+/* add */
+.posts > .post-meta {
+    font-size: 18px;
+    font-style: italic;
+    margin-top: 0;
+    color: #868e96;
 }
 
 .post {
@@ -288,11 +296,3 @@ footer {
 @import "highlights";
 @import "svg-icons";
 @import "fonts";
-
-/* 
-article.posts>.post-meta {
-    font-size: 18px;
-    font-style: italic;
-    margin-top: 0;
-    color: #868e96;
-}
