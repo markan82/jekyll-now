@@ -6,7 +6,7 @@
   "background_color": "#fcfcff",
   "display": "standalone",
   "Scope": "/",
-  "start_url": "/",
+  "start_url": "/pet/index.html",
   "icons": [
     {
       "src": "32.png",
