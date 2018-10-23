@@ -4,10 +4,22 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="//steemit.com/images/favicons/apple-touch-icon-57x57.png" type="image/png" />
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="//steemit.com/images/favicons/apple-touch-icon-114x114.png" type="image/png" />
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="//steemit.com/images/favicons/apple-touch-icon-72x72.png" type="image/png" />
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="//steemit.com/images/favicons/apple-touch-icon-144x144.png" type="image/png" />
+    <link rel="apple-touch-icon-precomposed" sizes="60x60" href="//steemit.com/images/favicons/apple-touch-icon-60x60.png" type="image/png" />
+    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="//steemit.com/images/favicons/apple-touch-icon-120x120.png" type="image/png" />
+    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="//steemit.com/images/favicons/apple-touch-icon-76x76.png" type="image/png" />
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="//steemit.com/images/favicons/apple-touch-icon-152x152.png" type="image/png" />
+    <link rel="icon" type="image/png" href="//steemit.com/images/favicons/favicon-196x196.png" sizes="196x196" />
+    <link rel="icon" type="image/png" href="//steemit.com/images/favicons/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/png" href="//steemit.com/images/favicons/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="//steemit.com/images/favicons/favicon-16x16.png" sizes="16x16" />
+    <link rel="icon" type="image/png" href="//steemit.com/images/favicons/favicon-128.png" sizes="128x128" />
     <title>스팀잇 업보팅 계산기</title>
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- IE8 에서 HTML5 요소와 미디어 쿼리를 위한 HTML5 shim 와 Respond.js -->
     <!-- WARNING: Respond.js 는 당신이 file:// 을 통해 페이지를 볼 때는 동작하지 않습니다. -->
     <!--[if lt IE 9]>
@@ -18,7 +30,18 @@
   <body>
     <div id="app">
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">스팀잇 업보팅 계산기</a>
+        <a class="navbar-brand mb-0 h1" href="#">스팀잇 업보팅 계산기</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		  </button>
+		  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+			<div class="navbar-nav">
+			  <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
+			  <!--<a class="nav-item nav-link" href="#">Features</a>
+			  <a class="nav-item nav-link" href="#">Pricing</a>
+			  <a class="nav-item nav-link disabled" href="#">Disabled</a>-->
+			</div>
+		  </div>
       </nav>
       <div class="container" style='padding-top:20px'>
         <div class="row">
@@ -127,7 +150,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="//cdn.steemjs.com/lib/latest/steem.min.js"></script>
-    <script src="//cdn.jsdelivr.net/npm/vue"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.min.js"></script>
     <script>
       let interval;
       const app = new Vue({
