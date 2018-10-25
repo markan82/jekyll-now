@@ -92,8 +92,9 @@
             <div class="card">
               <div class="card-header"></div>
               <div class="card-body">
-				<h1 class='preview title'>{{title}}</h1>
-                <div class='preview' ref="html_area" v-html='html'></div>
+				<h1 class='preview title mb-2'>{{title}}</h1>
+                <div class='preview mb-2' ref="html_area" v-html='html'></div>
+				<div><span class="badge badge-secondary mr-2" v-for="tag in tagArrays" :key="tag">{{tag}}</span></div>
               </div>
             </div>
           </div>
@@ -126,7 +127,7 @@
 			title: '',
 			body: '',			
 			metadata: {},
-			tags: [],
+			tags: "",
           }
         },
 		watch: {
@@ -142,6 +143,9 @@
 			if(this.metadata && this.metadata.tags) return this.metadata.tags;
 			return [];
 		  }*/
+		  tagArrays() {
+			return this.tags.split(',').map(e=>e.trim())
+		  }
         },
         created () {
          
@@ -166,10 +170,11 @@
 			},
 			async save() {
 				if(this.wif) {					
-					this.metadata["tags"] = this.tags.split(',');
+					this.metadata["tags"] = this.tags.split(',').map(e=>e.trim());
 					this.metadata["community"] = "busy";
 					this.metadata["app"] = "busy/2.5.6";
-					this.metadata["tags"].push('busy');
+					if(this.metadata["tags"].indexOf('busy')===-1)
+						this.metadata["tags"].push('busy');
 					console.log(this.metadata);
 					const jsonMetadata = JSON.stringify(this.metadata);
 					try
