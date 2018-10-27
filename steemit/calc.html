@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="//steemit.com/images/favicons/apple-touch-icon-57x57.png" type="image/png" />
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="//steemit.com/images/favicons/apple-touch-icon-114x114.png" type="image/png" />
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="//steemit.com/images/favicons/apple-touch-icon-72x72.png" type="image/png" />
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="//steemit.com/images/favicons/apple-touch-icon-144x144.png" type="image/png" />
+    <link rel="apple-touch-icon-precomposed" sizes="60x60" href="//steemit.com/images/favicons/apple-touch-icon-60x60.png" type="image/png" />
+    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="//steemit.com/images/favicons/apple-touch-icon-120x120.png" type="image/png" />
+    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="//steemit.com/images/favicons/apple-touch-icon-76x76.png" type="image/png" />
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="//steemit.com/images/favicons/apple-touch-icon-152x152.png" type="image/png" />
+    <link rel="icon" type="image/png" href="//steemit.com/images/favicons/favicon-196x196.png" sizes="196x196" />
+    <link rel="icon" type="image/png" href="//steemit.com/images/favicons/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/png" href="//steemit.com/images/favicons/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="//steemit.com/images/favicons/favicon-16x16.png" sizes="16x16" />
+    <link rel="icon" type="image/png" href="//steemit.com/images/favicons/favicon-128.png" sizes="128x128" />
+    <title>스팀잇 업보팅 계산기</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- IE8 에서 HTML5 요소와 미디어 쿼리를 위한 HTML5 shim 와 Respond.js -->
+    <!-- WARNING: Respond.js 는 당신이 file:// 을 통해 페이지를 볼 때는 동작하지 않습니다. -->
+    <!--[if lt IE 9]>
+      <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div id="app">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand mb-0 h1" href="#">스팀잇 업보팅 계산기</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		  </button>
+		  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+			<div class="navbar-nav">
+			  <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
+			  <!--<a class="nav-item nav-link" href="#">Features</a>
+			  <a class="nav-item nav-link" href="#">Pricing</a>
+			  <a class="nav-item nav-link disabled" href="#">Disabled</a>-->
+			</div>
+		  </div>
+      </nav>
+      <div class="container" style='padding-top:20px'>
+        <div class="row">
+          <div class="col-lg-6 col-xl-5">
+            <div class="form-row" style='margin-left:0'>
+              <div class="form-group col-12">
+                <div class="input-group input-group-sm">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="material-icons">person</i></span>
+                  </div>
+                  <input type="text" placeholder="Username" class="form-control" v-model="username" aria-label="Username" @keyup.enter="getAccount" aria-describedby="basic-addon1">
+                  <div class="input-group-append">
+                    <button type="button" class="btn btn-outline-secondary pb-0" @click.prevent="getAccount">
+                      <i class="material-icons">search</i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-6 col-xl-5">
+            <div class="card mb-2">
+              <div class="card-body">
+                <!-- <div class="progress">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
+                  </div> -->
+                <h5 class="card-title mb-3">@{{ username }}</h5>
+                <h6 class="card-subtitle mb-1 text-muted">보팅 파워</h6>
+                <div class="progress">
+                  <div class="progress-bar progress-bar-striped" role="progressbar" 
+                    :style="'width: ' + votingPower + '%'" :aria-valuenow="votingPower" aria-valuemin="0" aria-valuemax="100">{{ votingPower}}%</div>
+                </div>
+                <p class="card-text"><small class="text-muted">{{ remainHoursMessage }}</small></p>
+                <h6 class="card-subtitle mb-1 text-muted">보트 가치</h6>
+                <p class="card-text">${{ (voteValue || 0) | toFixed }}</p>
+                <h6 class="card-subtitle mb-1 text-muted">스팀 파워</h6>
+                <p class="card-text">
+                  {{ totalVestingSteem | toFixed }} STEEM
+                  <small class="text-muted" v-if="receivedVestingSteem > 0 || delegatedVestinSteem > 0">(
+                    <span v-if="receivedVestingSteem > 0">+{{ receivedVestingSteem | toFixed }}</span>
+                    <span v-if="delegatedVestinSteem > 0">-{{ delegatedVestinSteem | toFixed }}</span>
+                  STEEM)</small>
+                </p>
+                <!-- 스팀잇에서의 영향력을 나타냅니다. 스팀 파워가 높을수록 보팅 금액이 더 높아지고, 큐레이션 보상도 더 많이 받을 수 있습니다.
+                  anpigon 님은 STEEM POWER 를 임대 받고 있습니다. 임대 받는 양은 가입 시기에 따라 가변적입니다. -->
+
+                <h6 class="card-subtitle mb-1 text-muted">명성도</h6>
+                <p class="card-text">{{ reputation }} <small class="text-muted">({{ postCount }} posts)</small></p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 col-xl-5">
+            <div class="card">
+              <div class="card-header">업보팅 계산기</div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group row">
+                      <label for="vestingSteem" class="col-sm-5 col-form-label col-form-label-sm">스팀 파워</label>
+                      <div class="col-sm-7">
+                        <div class="input-group input-group-sm">
+                          <input type="text" class="form-control" id="vestingSteem" v-model='calc.vestingSteem'>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="votingPower" class="col-sm-5 col-form-label col-form-label-sm">보팅 파워</label>
+                      <div class="col-sm-7">
+                        <div class="input-group input-group-sm">
+                          <input type="text" class="form-control" id="votingPower" v-model='calc.votingPower'>
+                          <div class="input-group-append">
+                            <span class="input-group-text">%</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="voteWeight" class="col-sm-5 col-form-label col-form-label-sm" style='letter-spacing: -2px'>보팅 가중치</label>
+                      <div class="col-sm-7">
+                        <div class="input-group input-group-sm">
+                          <input type="text" class="form-control" id="voteWeight" v-model='calc.voteWeight'>
+                          <div class="input-group-append">
+                            <span class="input-group-text">%</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-6 text-center align-middle" style='font-size: 40px;font-weight:bold'>
+                    ${{ (calcUpvoteValue || 0) }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!-- /.container -->
+    </div>            
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="//code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="//cdn.steemjs.com/lib/latest/steem.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.min.js"></script>
+    <script>
+      let interval;
+      const app = new Vue({
+        el: '#app',
+        data() {
+          return {
+            username: window.localStorage.getItem('username') || '',
+            bandwidthRemaining: 0,
+            postCount: 0,
+            votingPower: 0,
+            remainHours: 0,
+            reputation: 0,
+            vestingSteem: 0,
+            receivedVestingSteem: 0,
+            delegatedVestinSteem: 0,
+            voteWeight: 100,
+            // Global Properties
+            totalVestingFundSteem: 0,
+            totalVestingShares: 0,
+            rewardBalance: 0,
+            recentClaims: 0,
+            steemPrice: 0,
+            calc: {
+              vestingSteem: 0,
+              votingPower: 100,
+              voteWeight: 100
+            }
+          }
+        },
+        filters: {
+          toFixed (value) {
+            if (value === null) return 0.00
+            return Number(value).toFixed(3)
+          }
+        },
+        computed: {
+          calcUpvoteValue () {
+            // 보팅파워 * 보팅가중치에 따른 비율 계산
+            let rate = parseInt((this.calc.votingPower * 100) * (this.calc.voteWeight * 100) / 1e4)
+            rate = parseInt((rate + 49) / 50) * 100 // 변환식(?)
+            // 나의 보팅 가치 계산
+            return (this.calc.vestingSteem / (this.totalVestingFundSteem / this.totalVestingShares) * rate * (this.rewardBalance / this.recentClaims) * this.steemPrice)
+          },
+          totalVestingSteem () {
+            return this.vestingSteem + this.receivedVestingSteem - this.delegatedVestinSteem
+          },
+          remainHoursMessage () {
+            const hours = parseInt(this.remainHours)
+            const minutes =  parseInt(this.remainHours * 10 % 10 / 10 * 60)
+            return '보팅파워가 가득 차기까지 ' + hours + '시간 '+ minutes + '분 남았습니다.'
+          },
+          voteValue () {
+            // 보팅파워 * 보팅가중치에 따른 비율 계산
+            let rate = parseInt((this.votingPower * 100) * (this.voteWeight * 100) / 1e4)
+            rate = parseInt((rate + 49) / 50) * 100 // 변환식(?)
+            // 나의 보팅 가치 계산
+            return (this.totalVestingSteem / (this.totalVestingFundSteem / this.totalVestingShares) * rate * (this.rewardBalance / this.recentClaims) * this.steemPrice)
+          }
+        },
+        created () {
+          if( this.username ) {
+            this.getAccount();
+          }
+        },
+        methods: {
+          // 사용자 정보 조회
+          async getAccount () {
+            try {
+              // 1. Global Properties 조회
+              const global = await steem.api.getDynamicGlobalPropertiesAsync()
+
+              this.totalVestingFundSteem = global.total_vesting_fund_steem.split(' ')[0] // total Vesting Fund Steem
+              this.totalVestingShares = global.total_vesting_shares.split(' ')[0] // total Vesting Shares  
+
+              // 2. 사용자 정보 조회
+              const accounts = await steem.api.getAccountsAsync([this.username])
+              if(accounts.length === 0) throw new Error('사용자 정보를 찾을 수 없습니다.')
+              
+              const account = accounts[0];
+              // console.log(accounts)
+
+              window.localStorage.setItem('username', account.name)
+              
+              const elapsed_seconds = (new Date() - new Date(account.last_vote_time + "Z")) / 1000; // 마지막 보팅 후 경과 시간
+              const regenerated_power = (10000 * elapsed_seconds) / (60 * 60 * 24 * 5); // 재생된 보팅파워
+              const current_power = Math.round(Math.min(account.voting_power + regenerated_power, 10000)); // 현재 보팅파워
+              this.votingPower = (current_power / 100);
+
+              // 보팅파워 남은 재생시간
+              this.remainHours = (10000 - current_power) * (5 * 60 * 60 * 24) / (60 * 60 * 10000)
+
+              // this.reputation = steem.formatter.reputation(account.reputation); // 평판
+              this.reputation = (Math.max(Math.log10(Math.abs(account.reputation)) - 9, 0) * ((account.reputation >= 0) ? 1 : -1) * 9 + 25).toFixed(2);
+              this.postCount = account.post_count;
+
+              const vestingSteem = steem.formatter.vestingSteem(account, global);
+              this.vestingSteem = vestingSteem;
+
+              const receivedVestingShares = parseFloat(account.received_vesting_shares.split(" ")[0]);
+              // if ( receivedVestingShares ) {
+                const receivedVestingSteem = this.totalVestingFundSteem * (receivedVestingShares / this.totalVestingShares);
+                this.receivedVestingSteem = receivedVestingSteem;
+              // }
+              const delegatedVestingShares = parseFloat(account.delegated_vesting_shares.split(" ")[0]);
+              this.delegatedVestinSteem = this.totalVestingFundSteem * (delegatedVestingShares / this.totalVestingShares);
+            
+              const rewardFund = await steem.api.getRewardFundAsync('post')
+              // reward balance                                                    
+              this.rewardBalance = rewardFund.reward_balance.split(' ')[0]
+          
+              // recent claims
+              this.recentClaims = rewardFund.recent_claims
+
+              // Current Median History Price 가져오기
+              const price = await steem.api.getCurrentMedianHistoryPriceAsync()
+              const base = price.base.split(' ')[0]
+              const quote = price.quote.split(' ')[0]
+
+              // SBD / STEEM의 가격 비율
+              this.steemPrice = base / quote
+
+              this.calc.vestingSteem = (this.totalVestingSteem).toFixed(3)
+            } catch(err) {
+              alert(err)
+            }
+          }
+        }
+      });
+      </script>
+  </body>
+</html>
