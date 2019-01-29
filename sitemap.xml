@@ -17,4 +17,7 @@
     {% endif %}
     {% endif %}
     {% endfor %}
+    <url>
+        <loc>https://anpigon.github.io/blog</loc>
+    </url>
 </urlset>
