@@ -4,26 +4,6 @@ layout: default
 
 <div class="posts">
   {% for post in site.posts %}
-    <article class="post">
-
-      
-      
-      <h1><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></h1>
-
-      <div class="entry">
-        <a href="{{ site.baseurl }}{{ post.url }}">{{ post.excerpt | strip_html | truncatewords:75 }}</a>
-      </div>
-      
-      <p class="post-meta">Posted by
-              {% if post.author %}
-                {{ post.author }}
-              {% else %}
-                {{ site.author }}
-              {% endif %}
-              on
-              {{ post.date | date: '%B %d, %Y' }}</p>
-
-<!--       <a href="{{ site.baseurl }}{{ post.url }}" class="read-more">Read More</a> -->
-    </article>
+    {% include post-item.html %}
   {% endfor %}
 </div>

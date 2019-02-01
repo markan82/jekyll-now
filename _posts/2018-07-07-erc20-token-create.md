@@ -1,6 +1,6 @@
 ---
 layout: post 
-category: 
+categories: Blockchain
 title: "이더리움 ERC20 토큰(또는 코인) 만들기"
 tagline: 
 tags : ["이더리움","geth","erc20","토큰"] 

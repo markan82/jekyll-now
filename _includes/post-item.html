@@ -1,0 +1,19 @@
+<article class="post">
+	<h1><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></h1>
+	<div class="entry">
+		<a href="{{ site.baseurl }}{{ post.url }}">{{ post.excerpt | strip_html | truncatewords:20 }}</a>
+	</div>
+	<p class="post-meta">Posted by
+		{% if post.author %}
+			{{ post.author }}
+		{% else %}
+			{{ site.author }}
+		{% endif %}
+		on
+		{{ post.date | date: '%B %d, %Y' }}
+		<!-- <span class="post__meta-category">
+			<a class="post__meta-category-link" href="{{ site.baseurl }}{{ post.category }}">{{ post.category }}</a>
+		</span> -->
+	</p>
+<!--       <a href="{{ site.baseurl }}{{ post.url }}" class="read-more">Read More</a> -->
+</article>
