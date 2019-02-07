@@ -14,7 +14,7 @@ font-family: 'Nanum Myeongjo', serif;
 
 // font-family: 'KoPub Batang', serif;
 //@import url(//fonts.googleapis.com/earlyaccess/notosansinscriptionalpahlavi.css);
-@import url('https://fonts.googleapis.com/css?family=Noto+Serif+KR&subset=korean');
+@import url('https://fonts.googleapis.com/css?family=Noto+Serif+KR:500&subset=korean');
 
 /* 제목 */
 h1,h2,h3,h4,h5,h6 {
@@ -23,6 +23,8 @@ h1,h2,h3,h4,h5,h6 {
   font-weight: 900;
   font-style: normal;
   text-transform: uppercase; 
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 h1 {
   font-size: 1.5em;
@@ -41,6 +43,7 @@ article.post .entry {
   word-break: break-all !important;
   font-family: 'Noto Serif KR', "나눔바른고딕OTF", "NanumBarunGothicOTF", "맑은 고딕", "Malgun Gothic", "애플 SD 산돌고딕 Neo", "Apple SD Gothic Neo", '돋움', Halvetica, Verdana, Arial, sans-serif !important;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   letter-spacing: -.03rem !important;
 }
 
