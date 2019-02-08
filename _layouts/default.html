@@ -92,5 +92,19 @@
       });
     </script>
     -->
+    <script>
+      (function() {
+        let body = document.querySelector('body');
+        document.querySelectorAll('article.post a').forEach(function(e) {
+          e.onclick = function() {
+            setTimeout(function() {
+              body.classList.remove('hiddenFadeOut');
+              body.classList.add('visibleFadeIn');
+            }, 100);
+            body.classList.add('hiddenFadeOut');
+          }
+        });
+      })();
+    </script>
   </body>
 </html>
